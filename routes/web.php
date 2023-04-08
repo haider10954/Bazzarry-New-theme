@@ -40,7 +40,7 @@ Route::prefix('user')->group(function () {
         Route::post('/shipping-address', [CheckoutController::class, 'Shipping_address'])->name('shipping-address');
 
         //Place Order
-        Route::get('/order', [CheckoutController::class, 'generate_invoice'])->name('order');
+        Route::get('/order/{order_id}', [CheckoutController::class, 'generate_invoice'])->name('order');
         Route::post('/order', [CheckoutController::class, 'place_order'])->name('place_order');
     });
 });

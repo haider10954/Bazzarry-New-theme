@@ -9,7 +9,7 @@
             <ul class="breadcrumb shop-breadcrumb bb-no">
                 <li class="active"><a href="{{route('cart')}}">Shopping Cart</a></li>
                 <li><a href="{{route('checkout')}}">Checkout</a></li>
-                <li><a href="{{route('order')}}">Order Complete</a></li>
+                <li><a href="javascript:void(0)">Order Complete</a></li>
             </ul>
         </div>
     </nav>

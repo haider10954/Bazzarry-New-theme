@@ -105,13 +105,13 @@ class CheckoutController extends Controller
 
         session()->forget('cart');
         if ($place_order) {
-            return redirect()->route('order');
+            return redirect()->route('order',$place_order->order_id);
         }
     }
 
-    public function generate_invoice()
+    public function generate_invoice($orderNumber)
     {
-        $order = Order::query()->with('getBillingAddress')->where('user_id', auth()->id())->first();
+        $order = Order::query()->with('getBillingAddress')->where('user_id', auth()->id())->where('order_id',$orderNumber)->first();
         return view('user.pages.order', compact('order'));
     }
 }

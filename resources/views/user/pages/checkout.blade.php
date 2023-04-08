@@ -9,7 +9,7 @@
             <ul class="breadcrumb shop-breadcrumb bb-no">
                 <li class="passed"><a href="{{route('cart')}}">Shopping Cart</a></li>
                 <li class="active"><a href="{{route('checkout')}}">Checkout</a></li>
-                <li><a href="{{route('order')}}">Order Complete</a></li>
+                <li><a href="javascript:void(0)">Order Complete</a></li>
             </ul>
         </div>
     </nav>
@@ -88,11 +88,13 @@
                             <div class="select-box">
                                 <select name="country" class="form-control form-control-md">
                                     <option value="">Select Country</option>
+                                    @if (!empty(auth()->user()->country_id))
                                     @foreach ($country as $item)
                                     <option value="{{ $item->id }}" {{ $item->id==auth()->user()->country_id ? 'selected' : '' }}>
                                         {{ $item->name }}
                                     </option>
                                     @endforeach
+                                    @endif
 
 
                                 </select>
@@ -109,11 +111,13 @@
                                     <div class="select-box">
                                         <select name="city" class="form-control form-control-md">
                                             <option value="">Select City</option>
+                                            @if (!empty(auth()->user()->city_id))
                                             @foreach ($city as $item)
                                             <option value="{{ $item->id }}" {{ $item->id==auth()->user()->city_id ? 'selected' : '' }}>
                                                 {{ $item->name }}
                                             </option>
                                             @endforeach
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
@@ -128,11 +132,13 @@
                                     <div class="select-box">
                                         <select name="state" class="form-control form-control-md">
                                             <option value="">Select State</option>
+                                            @if (!empty(auth()->user()->state_id))
                                             @foreach ($state as $item)
                                             <option value="{{ $item->id }}" {{ $item->id==auth()->user()->state_id ? 'selected' : '' }}>
                                                 {{ $item->name }}
                                             </option>
                                             @endforeach
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
@@ -144,7 +150,7 @@
                         </div>
                         <div class="form-group mb-7">
                             <label>Email address *</label>
-                            <input type="email" class="form-control form-control-md" name="email" value="{{ auth()->user()->email }}">
+                            <input type="email" class="form-control form-control-md" name="email" value="{{ !empty(auth()->user()->email) ? auth()->user()->email : '' }}">
                         </div>
                         <div class="form-group mb-7">
                             <div>
