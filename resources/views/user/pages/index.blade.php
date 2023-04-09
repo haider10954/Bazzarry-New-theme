@@ -1376,7 +1376,7 @@
             </div>
         </div>
         <!-- End of Banner Product Wrapper -->
-
+        @if($advertisement !=null)
         <!-- Start of Product Advertisement -->
         <div class="banner br-sm banner-electronics appear-animate" style="background-image: url({{asset($advertisement->banner_image)}});
                     background-color: #333;">
@@ -1388,6 +1388,7 @@
             </div>
             <a href="{{ route('products')}}" class="btn btn-white btn-rounded btn-icon-right mt-1">Shop Now<i class="w-icon-long-arrow-right"></i></a>
         </div>
+        @endif
         <!-- End of Product Advertisement -->
 
 
