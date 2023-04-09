@@ -22,6 +22,9 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+//Cities and States
+Route::post('fetch-states', [UserAuthController::class, 'fetchStates'])->name('CheckCountry');
+Route::post('fetch-cities', [UserAuthController::class, 'fetchCities'])->name('CheckState');
 
 Route::get('/', [IndexController::class, 'index'])->name('index');
 Route::post('/user-login', [UserAuthController::class, 'userLogin'])->name('user_login');
@@ -34,6 +37,8 @@ Route::prefix('user')->group(function () {
         Route::get('/profile', function () {
             return view('user.pages.profile');
         })->name('user-profile');
+        Route::post('/updateProfile', [UserAuthController::class, 'userProfileUpdate'])->name('updateUserProfile');
+
 
         // Billing Address
         Route::post('/billing-address', [CheckoutController::class, 'billing_address'])->name('billing-address');

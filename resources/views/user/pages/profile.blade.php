@@ -344,19 +344,20 @@
                                     <h4 class="icon-box-title mb-0 ls-normal">Account Details</h4>
                                 </div>
                             </div>
-                            <form class="form account-details-form" action="#" method="post">
+                            <form class="form account-details-form" id="updateProfile">
+                                @csrf
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="firstname">First name *</label>
-                                            <input type="text" id="firstname" name="firstname" placeholder="First Name" value="{{ auth()->user()->name }}"
+                                            <input type="text" id="firstname" name="name" placeholder="First Name" value="{{ auth()->user()->name }}"
                                                    class="form-control form-control-md">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="lastname">Last name *</label>
-                                            <input type="text" id="lastname" name="lastname" placeholder="Last name" value="{{ auth()->user()->last_name }}"                                                   class="form-control form-control-md">
+                                            <input type="text" id="lastname" name="last_name" placeholder="Last name" value="{{ auth()->user()->last_name }}"                                                   class="form-control form-control-md">
                                         </div>
                                     </div>
                                 </div>
@@ -367,10 +368,56 @@
                                            class="form-control form-control-md mb-0">
                                     <p>This will be how your name will be displayed in the account section and in reviews</p>
                                 </div>
-
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="firstname">Country</label>
+                                            <select name="country_id" class="form-control form-control-sm" onchange="CheckCountry($(this))">
+                                                <option value="">Select Country</option>
+                                                @foreach ($countries as $key => $value)
+                                                    <option value="{{ $value->id }}" data-code="{{ $value->phonecode }}">{{ $value->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="firstname">State</label>
+                                            <select class="form-control form-control-sm" name="state_id" id="stateDropdown">
+                                                <option value="default" selected="selected">Default</option>
+                                                <option value="recent">Most Recent</option>
+                                                <option value="popular">Most Popular</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="firstname">City</label>
+                                            <select id="cityDropdown" name="city_id" class="form-control form-control-sm">
+                                                <option value="default" selected="selected">Default</option>
+                                                <option value="recent">Most Recent</option>
+                                                <option value="popular">Most Popular</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <label for="firstname">Code</label>
+                                                <input type="text" id="phone_code" readonly name="number" placeholder=""
+                                                       class="form-control form-control-md mb-0">
+                                            </div>
+                                            <div class="col-9">
+                                                <label for="firstname">Number</label>
+                                                <input type="number" id="number" name="phone" placeholder="Enter Number"
+                                                       class="form-control form-control-md mb-0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-group mb-6">
                                     <label for="email_1">Email address *</label>
-                                    <input type="email" id="email_1" name="email_1"
+                                    <input type="email" id="email_1" name="email"
                                            class="form-control form-control-md" value="{{ auth()->user()->email}}">
                                 </div>
 
@@ -390,7 +437,11 @@
                                     <input type="password" class="form-control form-control-md"
                                            id="conf-password" name="conf_password">
                                 </div>
-                                <button type="submit" class="btn btn-dark btn-rounded btn-sm mb-4">Save Changes</button>
+                                <div class="form-group mb-10">
+                                    <label class="text-dark" for="conf-password">Address</label>
+                                    <textarea class="form-control form-control-md" name="address" rows="3"></textarea>
+                                </div>
+                                <button type="submit" id="submitBtn" class="btn btn-dark btn-rounded btn-sm mb-4">Save Changes</button>
                             </form>
                         </div>
                     </div>
@@ -399,4 +450,163 @@
         </div>
         <!-- End of PageContent -->
     </main>
+@endsection
+@section('custom-scripts')
+    <script>
+        // COUNTRY
+        function CheckCountry(Country) {
+            var CountryID = Country.find(":selected").val();
+            var CountryCode = Country.find(":selected").attr('data-code');
+
+            if (!CountryCode) {
+                $('#phone_code').val('');
+            } else {
+                $('#phone_code').val(`+` + CountryCode);
+            }
+            $.ajax({
+                type: "POST",
+                url: "{{  route('CheckCountry')  }}",
+                dataType: 'json',
+                data: {
+                    Country_id: CountryID,
+                    _token: '{{ csrf_token() }}'
+                },
+                beforeSend: function() {},
+                success: function(res) {
+                    var states = res.States;
+                    if (states.length > 0) {
+                        $('#stateDropdown').html('');
+                        $('#stateDropdown').append(`<option value="">Select State</option>`)
+                        for (var i = 0; i < states.length; i++) {
+                            $('#stateDropdown').append(`<option value="` + states[i]['id'] + `">` + states[i]['name'] + `</option>`)
+                        }
+                    } else {
+                        $('#stateDropdown').html('');
+                        $('#stateDropdown').append(`<option value="">Select State</option>`)
+                    }
+                },
+                error: function(e) {}
+            });
+        };
+        // END COUNTRY
+
+        // States
+        $("#stateDropdown").on('change', function() {
+            let state = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "{{  route('CheckState')  }}",
+                dataType: 'json',
+                data: {
+                    State_id: state,
+                    _token: '{{ csrf_token() }}'
+                },
+                beforeSend: function() {},
+                success: function(res) {
+                    var City = res.City;
+                    if (City.length > 0) {
+                        $('#cityDropdown').html('');
+                        $('#cityDropdown').append(`<option value="">Select City</option>`)
+                        for (var i = 0; i < City.length; i++) {
+                            $('#cityDropdown').append(`<option value="` + City[i]['id'] + `">` + City[i]['name'] + `</option>`)
+                        }
+                    } else {
+                        $('#cityDropdown').html('');
+                        $('#cityDropdown').append(`<option value="">Select City</option>`)
+                    }
+                },
+                error: function(e) {}
+            });
+        });
+        // END STATE
+        //User Sign Up
+        $("#updateProfile").on('submit', function(e) {
+            e.preventDefault();
+            var form = $('#updateProfile')[0];
+            var formData = new FormData(form);
+            $.ajax({
+                type: "POST",
+                url: "{{ route('updateUserProfile') }}",
+                dataType: 'json',
+                data: formData,
+                contentType: false,
+                processData: false,
+                cache: false,
+                mimeType: "multipart/form-data",
+                beforeSend: function() {
+                    $("#submitBtn").prop('disabled', true);
+                    $("#submitBtn").html('Processing');
+                    $('.error-message').hide();
+                },
+                success: function(res) {
+                    $("#submitBtn").prop('disabled', false);
+                    $("#submitBtn").attr('class', 'btn btn-success');
+                    $("#submitBtn").html('Registered');
+                    if (res.success === true) {
+                        notyf.success({
+                            message: res.message,
+                            duration: 3000
+                        });
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 3200);
+                    } else {
+                        notyf.error({
+                            message: res.message,
+                            duration: 3000
+                        })
+                    }
+                },
+                error: function(e) {
+                    $("#submitForm").prop('disabled', false);
+                    $("#submitForm").html('Submit');
+
+                    if (e.responseJSON.errors['name']) {
+                        $('.error-name').html('<small class=" error-message text-danger">' + e
+                            .responseJSON.errors['name'][0] + '</small>');
+                    }
+
+                    if (e.responseJSON.errors['last_name']) {
+                        $('.error-last-name').html('<small class=" error-message text-danger">' + e
+                            .responseJSON.errors['last_name'][0] + '</small>');
+                    }
+
+                    if (e.responseJSON.errors['email']) {
+                        $('.error-email').html('<small class=" error-message text-danger">' + e
+                            .responseJSON.errors['email'][0] + '</small>');
+                    }
+
+                    if (e.responseJSON.errors['gender']) {
+                        $('.error-gender').html('<small class=" error-message text-danger">' + e
+                            .responseJSON.errors['gender'][0] + '</small>');
+                    }
+                    if (e.responseJSON.errors['password']) {
+                        $('.error-password').html('<small class=" error-message text-danger">' + e
+                            .responseJSON.errors['password'][0] + '</small>');
+                    }
+
+                    if (e.responseJSON.errors['country_id']) {
+                        $('.error-country').html('<small class=" error-message text-danger">' + e
+                            .responseJSON.errors['country_id'][0] + '</small>');
+                    }
+
+                    if (e.responseJSON.errors['state_id']) {
+                        $('.error-state').html('<small class=" error-message text-danger">' + e
+                            .responseJSON.errors['state_id'][0] + '</small>');
+                    }
+
+                    if (e.responseJSON.errors['city_id']) {
+                        $('.error-city').html('<small class=" error-message text-danger">' + e
+                            .responseJSON.errors['city_id'][0] + '</small>');
+                    }
+
+                    if (e.responseJSON.errors['phonenumber']) {
+                        $('.error-number').html('<small class=" error-message text-danger">' + e
+                            .responseJSON.errors['phonenumber'][0] + '</small>');
+                    }
+
+                }
+            });
+        });
+    </script>
 @endsection

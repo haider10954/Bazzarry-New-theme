@@ -157,39 +157,25 @@ class AuthController extends Controller
             'name' => 'required',
             'last_name' => 'required',
             'email' => 'required|email',
-            'country' => 'required',
-            'state' => 'required',
-            'city' => 'required',
+            'country_id' => 'required',
+            'state_id' => 'required',
+            'city_id' => 'required',
             'phone' => 'required',
             'avatar' => 'nullable|mimes:jpg,jpeg,png',
             'banner_image' => 'nullable|mimes:jpg,jpeg,png',
         ]);
 
-        $mainImageName = "";
-        if ($request->hasFile('avatar')) {
-            $mainImageName = time() . '.' . $request->avatar->extension();
-            $request->avatar->storeAs('public/user/profile-image', $mainImageName);
-            $mainImageName = 'storage/user/profile-image/' . $mainImageName;
-        }
-
-        $userBannerImage = "";
-        if ($request->hasFile('banner_image')) {
-            $userBannerImage = time() . '.' . $request->banner_image->extension();
-            $request->banner_image->storeAs('public/user/banner-image', $userBannerImage);
-            $userBannerImage = 'storage/user/banner-image/' . $userBannerImage;
-        }
-
-        $user = User::where('id', $request->id)->update([
+        $user = User::where('id', auth()->id())->update([
             'name' => $request['name'],
             'last_name' => $request['last_name'],
             'email' => $request['email'],
-            'country_id' => $request['country'],
-            'state_id' => $request['state'],
-            'city_id' => $request['city'],
+            'country_id' => $request['country_id'],
+            'state_id' => $request['state_id'],
+            'city_id' => $request['city_id'],
             'address' => $request['address'] ?? null,
             'phone' => $request['phone'],
-            'avatar' => $mainImageName ?? null,
-            'profile_banner' => $userBannerImage ?? null,
+            'avatar' => null,
+            'profile_banner' => null,
         ]);
 
         if ($user) {
