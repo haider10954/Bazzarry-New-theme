@@ -34,7 +34,7 @@
                             <a href="#account-orders" class="nav-link">Orders</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#account-downloads" class="nav-link">Downloads</a>
+                            <a href="#account-downloads" class="nav-link">Security</a>
                         </li>
                         <li class="nav-item">
                             <a href="#account-addresses" class="nav-link">Addresses</a>
@@ -90,7 +90,7 @@
                                                     <i class="w-icon-download"></i>
                                                 </span>
                                             <div class="icon-box-content">
-                                                <p class="text-uppercase mb-0">Downloads</p>
+                                                <p class="text-uppercase mb-0">Security</p>
                                             </div>
                                         </div>
                                     </a>
@@ -227,17 +227,26 @@
                         </div>
 
                         <div class="tab-pane" id="account-downloads">
-                            <div class="icon-box icon-box-side icon-box-light">
-                                    <span class="icon-box-icon icon-downloads mr-2">
-                                        <i class="w-icon-download"></i>
-                                    </span>
+                            <div class="row">
                                 <div class="icon-box-content">
-                                    <h4 class="icon-box-title ls-normal">Downloads</h4>
+                                    <h4 class="title title-password ls-25 font-weight-bold">Password change</h4>
+                                </div>
+                                <div class="form-group">
+                                    <label class="text-dark" for="cur-password">Current Password leave blank to leave unchanged</label>
+                                    <input type="password" class="form-control form-control-md" id="cur-password" name="cur_password">
+                                </div>
+                                <div class="form-group">
+                                    <label class="text-dark" for="new-password">New Password leave blank to leave unchanged</label>
+                                    <input type="password" class="form-control form-control-md" id="new-password" name="new_password">
+                                </div>
+                                <div class="form-group mb-10">
+                                    <label class="text-dark" for="conf-password">Confirm Password</label>
+                                    <input type="password" class="form-control form-control-md" id="conf-password" name="conf_password">
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="submit" id="submitBtn" class="btn btn-dark btn-rounded btn-sm mb-4 w-25">Save Changes</button>
                                 </div>
                             </div>
-                            <p class="mb-4">No downloads available yet.</p>
-                            <a href="shop-banner-sidebar.html" class="btn btn-dark btn-rounded btn-icon-right">Go
-                                Shop<i class="w-icon-long-arrow-right"></i></a>
                         </div>
 
                         <div class="tab-pane" id="account-addresses">
@@ -421,22 +430,6 @@
                                            class="form-control form-control-md" value="{{ auth()->user()->email}}">
                                 </div>
 
-                                <h4 class="title title-password ls-25 font-weight-bold">Password change</h4>
-                                <div class="form-group">
-                                    <label class="text-dark" for="cur-password">Current Password leave blank to leave unchanged</label>
-                                    <input type="password" class="form-control form-control-md"
-                                           id="cur-password" name="cur_password">
-                                </div>
-                                <div class="form-group">
-                                    <label class="text-dark" for="new-password">New Password leave blank to leave unchanged</label>
-                                    <input type="password" class="form-control form-control-md"
-                                           id="new-password" name="new_password">
-                                </div>
-                                <div class="form-group mb-10">
-                                    <label class="text-dark" for="conf-password">Confirm Password</label>
-                                    <input type="password" class="form-control form-control-md"
-                                           id="conf-password" name="conf_password">
-                                </div>
                                 <div class="form-group mb-10">
                                     <label class="text-dark" for="conf-password">Address</label>
                                     <textarea class="form-control form-control-md" name="address" rows="3"></textarea>
