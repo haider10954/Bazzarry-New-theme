@@ -28,6 +28,7 @@ Route::post('fetch-cities', [UserAuthController::class, 'fetchCities'])->name('C
 
 Route::get('/', [IndexController::class, 'index'])->name('index');
 Route::post('/user-login', [UserAuthController::class, 'userLogin'])->name('user_login');
+Route::post('/user-register', [UserAuthController::class, 'user_signUp'])->name('user_register');
 //User Logout
 Route::get('/user/logout', [UserAuthController::class, 'userlogout'])->name('user_logout');
 
