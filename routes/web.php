@@ -34,9 +34,7 @@ Route::get('/user/logout', [UserAuthController::class, 'userlogout'])->name('use
 Route::prefix('user')->group(function () {
 
     Route::middleware('auth')->group(function () {
-        Route::get('/profile', function () {
-            return view('user.pages.profile');
-        })->name('user-profile');
+        Route::get('/profile', [UserAuthController::class , 'userProfileView'])->name('user-profile');
         Route::post('/updateProfile', [UserAuthController::class, 'userProfileUpdate'])->name('updateUserProfile');
 
 

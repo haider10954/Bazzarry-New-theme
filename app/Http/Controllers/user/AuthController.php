@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\user;
 
 use App\Http\Controllers\Controller;
+use App\Models\Billing_detail;
 use App\Models\City;
 use App\Models\Country;
+use App\Models\Order;
+use App\Models\Shipping_detail;
 use App\Models\State;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -148,7 +151,10 @@ class AuthController extends Controller
         $countries = Country::get();
         $states = State::get();
         $cities = City::get();
-        return view('user.pages.profile', compact('countries', 'states', 'cities'));
+        $order = Order::query()->where('user_id',auth()->id())->get();
+        $billing_address = Billing_detail::query()->where('user_id',auth()->id())->first();
+        $shipping_detail = Shipping_detail::query()->where('billing_details',$billing_address->id)->first();
+        return view('user.pages.profile', compact('countries', 'states', 'cities', 'order' , 'billing_address','shipping_detail'));
     }
 
     public function userProfileUpdate(Request $request)
@@ -157,25 +163,39 @@ class AuthController extends Controller
             'name' => 'required',
             'last_name' => 'required',
             'email' => 'required|email',
-            'country_id' => 'required',
-            'state_id' => 'required',
-            'city_id' => 'required',
+            'country' => 'required',
+            'state' => 'required',
+            'city' => 'required',
             'phone' => 'required',
             'avatar' => 'nullable|mimes:jpg,jpeg,png',
             'banner_image' => 'nullable|mimes:jpg,jpeg,png',
         ]);
 
-        $user = User::where('id', auth()->id())->update([
+        $mainImageName = "";
+        if ($request->hasFile('avatar')) {
+            $mainImageName = time() . '.' . $request->avatar->extension();
+            $request->avatar->storeAs('public/user/profile-image', $mainImageName);
+            $mainImageName = 'storage/user/profile-image/' . $mainImageName;
+        }
+
+        $userBannerImage = "";
+        if ($request->hasFile('banner_image')) {
+            $userBannerImage = time() . '.' . $request->banner_image->extension();
+            $request->banner_image->storeAs('public/user/banner-image', $userBannerImage);
+            $userBannerImage = 'storage/user/banner-image/' . $userBannerImage;
+        }
+
+        $user = User::where('id', $request->id)->update([
             'name' => $request['name'],
             'last_name' => $request['last_name'],
             'email' => $request['email'],
-            'country_id' => $request['country_id'],
-            'state_id' => $request['state_id'],
-            'city_id' => $request['city_id'],
+            'country_id' => $request['country'],
+            'state_id' => $request['state'],
+            'city_id' => $request['city'],
             'address' => $request['address'] ?? null,
             'phone' => $request['phone'],
-            'avatar' => null,
-            'profile_banner' => null,
+            'avatar' => $mainImageName ?? null,
+            'profile_banner' => $userBannerImage ?? null,
         ]);
 
         if ($user) {
