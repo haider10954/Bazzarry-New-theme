@@ -638,30 +638,35 @@ $useAssets = [];
                                 </div>
                                 <div class="form-group mb-0">
                                     <label>Password *</label>
-                                    <input type="text" class="form-control" name="password" id="password">
+                                    <input type="password" class="form-control" name="password" id="password">
                                     <div class="error-password"></div>
                                 </div>
                                 <button type="submit" id="submitForm" class="btn btn-primary w-100">Sign In</a>
                             </form>
                         </div>
                         <div class="tab-pane" id="sign-up">
-                            <div class="form-group">
-                                <label>Your Email address *</label>
-                                <input type="text" class="form-control" name="email_1" id="email_1" required>
-                            </div>
-                            <div class="form-group mb-5">
-                                <label>Password *</label>
-                                <input type="text" class="form-control" name="password_1" id="password_1" required>
-                            </div>
-                            <p>Your personal data will be used to support your experience
-                                throughout this website, to manage access to your account,
-                                and for other purposes described in our <a href="#" class="text-primary">privacy policy</a>.</p>
-                            <a href="#" class="d-block mb-5 text-primary">Signup as a seller?</a>
-                            <div class="form-checkbox d-flex align-items-center justify-content-between mb-5">
-                                <input type="checkbox" class="custom-checkbox" id="agree" name="agree" required="">
-                                <label for="agree" class="font-size-md">I agree to the <a href="#" class="text-primary font-size-md">privacy policy</a></label>
-                            </div>
-                            <a href="#" class="btn btn-primary">Sign Up</a>
+                            <form id="RegisterForm">
+                                @csrf
+                                <div class="form-group">
+                                    <label>Your Email address *</label>
+                                    <input type="text" class="form-control" name="email" id="email">
+                                    <div class="error-email"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Name*</label>
+                                    <input type="text" class="form-control" name="name" id="name">
+                                </div>
+                                <div class="form-group mb-5">
+                                    <label>Password *</label>
+                                    <input type="password" class="form-control" name="password" id="password">
+                                    <div class="error-password"></div>
+                                </div>
+                                <div class="form-checkbox d-flex align-items-center justify-content-between mb-5">
+                                    <input type="checkbox" class="custom-checkbox" id="agree" name="agree" required="">
+                                    <label for="agree" class="font-size-md">I agree to the <a href="#" class="text-primary font-size-md">privacy policy</a></label>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+                            </form>
                         </div>
                     </div>
                     <p class="text-center">Sign in with social account</p>
@@ -758,6 +763,58 @@ $useAssets = [];
                 error: function(e) {}
             });
         })
+
+        $("#RegisterForm").on('submit', function(e) {
+            e.preventDefault();
+            var form = $('#RegisterForm')[0];
+            var formData = new FormData(form);
+            $.ajax({
+                type: "POST",
+                url: "{{ route('user_register') }}",
+                dataType: 'json',
+                data: formData,
+                contentType: false,
+                processData: false,
+                cache: false,
+                beforeSend: function() {
+                    $("#submitForm").prop('disabled', true);
+                    $("#submitForm").html('Processing');
+                    $('.error-message').hide();
+                },
+                success: function(res) {
+                    $("#submitForm").prop('disabled', false);
+                    $("#submitForm").html('Log in');
+                    if (res.success === true) {
+                        notyf.success({
+                            message: res.message,
+                            duration: 3000
+                        });
+                        setTimeout(function() {
+                            window.location.href = "{{ route('user-profile') }}";
+                        }, 3200);
+                    } else {
+                        notyf.error({
+                            message: res.message,
+                            duration: 3000
+                        })
+                    }
+                },
+                error: function(e) {
+                    $("#submitForm").prop('disabled', false);
+                    $("#submitForm").html('Submit');
+
+                    if (e.responseJSON.errors['email']) {
+                        $('.error-email').html('<small class=" error-message text-danger">' + e
+                            .responseJSON.errors['email'][0] + '</small>');
+                    }
+
+                    if (e.responseJSON.errors['password']) {
+                        $('.error-password').html('<small class=" error-message text-danger">' + e
+                            .responseJSON.errors['password'][0] + '</small>');
+                    }
+                }
+            });
+        });
     </script>
     <!-- Plugin JS File -->
 </body>

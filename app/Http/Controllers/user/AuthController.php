@@ -43,38 +43,19 @@ class AuthController extends Controller
     }
     public function user_signUp(Request $request)
     {
+
         $request->validate([
             'name' => 'required',
-            'lastname' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
-            'gender' => 'required',
-            'country_id' => 'required',
-            'state_id' => 'required',
-            'city_id' => 'required',
-            'phonenumber' => 'required',
-            'avatar' => 'nullable|mimes:jpg,jpeg,png',
         ]);
-        $mainImageName = "";
-        if ($request->hasFile('avatar')) {
-            $mainImageName = time() . '.' . $request->avatar->extension();
-            $request->avatar->storeAs('public/user/profile-image', $mainImageName);
-            $mainImageName = 'storage/user/profile-image/' . $mainImageName;
-        }
         $user = User::create([
             'name' => $request['name'],
-            'last_name' => $request['lastname'],
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
-            'country_id' => $request['country_id'],
-            'state_id' => $request['state_id'],
-            'city_id' => $request['city_id'],
-            'address' => $request['address'] ?? null,
-            'phone' => $request['phonenumber'],
-            'avatar' => $mainImageName ?? null,
-            'gender' => $request['gender'],
-            'postCode' => $request['post_code'],
         ]);
+        Auth::login($user);
+
         if ($user) {
             return json_encode([
                 'success' => true,
@@ -151,10 +132,15 @@ class AuthController extends Controller
         $countries = Country::get();
         $states = State::get();
         $cities = City::get();
-        $order = Order::query()->where('user_id',auth()->id())->get();
-        $billing_address = Billing_detail::query()->where('user_id',auth()->id())->first();
-        $shipping_detail = Shipping_detail::query()->where('billing_details',$billing_address->id)->first();
-        return view('user.pages.profile', compact('countries', 'states', 'cities', 'order' , 'billing_address','shipping_detail'));
+        $order = Order::query()->where('user_id', auth()->id())->get();
+        $billing_address = Billing_detail::query()->where('user_id', auth()->id())->first();
+        if (!empty($billing_address)) {
+
+            $shipping_detail = Shipping_detail::query()->where('billing_details', $billing_address->id)->first();
+        } else {
+            $shipping_detail = [];
+        }
+        return view('user.pages.profile', compact('countries', 'states', 'cities', 'order', 'billing_address', 'shipping_detail'));
     }
 
     public function userProfileUpdate(Request $request)
