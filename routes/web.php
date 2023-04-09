@@ -56,6 +56,9 @@ Route::get('/cart', function () {
 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 
+Route::get('/wishlist', function () {
+    return view('user.pages.wishList');
+})->name('wishlist');
 
 Route::get('/products', function () {
     return view('user.pages.products');

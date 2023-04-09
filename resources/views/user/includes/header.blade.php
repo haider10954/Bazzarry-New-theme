@@ -1,4 +1,4 @@
-<header class="header">
+    <header class="header">
     <div class="header-top">
         <div class="container">
             <div class="header-left">
@@ -87,7 +87,7 @@
                         <a href="tel:#" class="phone-number font-weight-bolder ls-50">0(800)123-456</a>
                     </div>
                 </div>
-                <a class="wishlist label-down link d-xs-show" href="wishlist.html">
+                <a class="wishlist label-down link d-xs-show" href="{{route('wishlist')}}">
                     <i class="w-icon-heart"></i>
                     <span class="wishlist-label d-lg-show">Wishlist</span>
                 </a>

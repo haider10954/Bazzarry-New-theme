@@ -49,9 +49,9 @@ class CheckoutController extends Controller
         ]);
 
         if ($billing_address) {
-            return redirect()->with('msg', 'Your Billing Address has been Saved');
+            return redirect()->back()->with('msg', 'Your Billing Address has been Saved');
         } else {
-            return redirect()->with('msg', 'something went wrong please try again later');
+            return redirect()->back()->with('msg', 'something went wrong please try again later');
         }
     }
 

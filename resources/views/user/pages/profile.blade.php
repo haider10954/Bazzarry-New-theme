@@ -43,7 +43,7 @@
                             <a href="#account-details" class="nav-link">Account details</a>
                         </li>
                         <li class="link-item">
-                            <a href="wishlist.html">Wishlist</a>
+                            <a href="{{route('wishlist')}}">Wishlist</a>
                         </li>
                         <li class="link-item">
                             <a href="{{ route('user_logout') }}">Logout</a>
@@ -167,58 +167,32 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                @if($order->count()>0)
+                                    @foreach($order as $item)
                                 <tr>
-                                    <td class="order-id">#2321</td>
-                                    <td class="order-date">August 20, 2021</td>
-                                    <td class="order-status">Processing</td>
+                                    <td class="order-id">{{$item->order_id}}</td>
+                                    <td class="order-date">{{\Carbon\Carbon::parse($item->created_at)->format('M d,Y')}}</td>
+                                    @if ($item->status == 0)
+
+                                        <td class="order-status">Processing</td>
+                                    @else
+
+                                        <td class="order-status">Complete</td>
+                                    @endif
                                     <td class="order-total">
-                                        <span class="order-price">$121.00</span> for
-                                        <span class="order-quantity"> 1</span> item
+                                        <span class="order-price">Rs. {{$item->total}}</span>
                                     </td>
                                     <td class="order-action">
                                         <a href="#"
                                            class="btn btn-outline btn-default btn-block btn-sm btn-rounded">View</a>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="order-id">#2321</td>
-                                    <td class="order-date">August 20, 2021</td>
-                                    <td class="order-status">Processing</td>
-                                    <td class="order-total">
-                                        <span class="order-price">$150.00</span> for
-                                        <span class="order-quantity"> 1</span> item
-                                    </td>
-                                    <td class="order-action">
-                                        <a href="#"
-                                           class="btn btn-outline btn-default btn-block btn-sm btn-rounded">View</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="order-id">#2319</td>
-                                    <td class="order-date">August 20, 2021</td>
-                                    <td class="order-status">Processing</td>
-                                    <td class="order-total">
-                                        <span class="order-price">$201.00</span> for
-                                        <span class="order-quantity"> 1</span> item
-                                    </td>
-                                    <td class="order-action">
-                                        <a href="#"
-                                           class="btn btn-outline btn-default btn-block btn-sm btn-rounded">View</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="order-id">#2318</td>
-                                    <td class="order-date">August 20, 2021</td>
-                                    <td class="order-status">Processing</td>
-                                    <td class="order-total">
-                                        <span class="order-price">$321.00</span> for
-                                        <span class="order-quantity"> 1</span> item
-                                    </td>
-                                    <td class="order-action">
-                                        <a href="#"
-                                           class="btn btn-outline btn-default btn-block btn-sm btn-rounded">View</a>
-                                    </td>
-                                </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="5" align="center"><h4>No Record Found..</h4></td>
+                                    </tr>
+                                @endif
                                 </tbody>
                             </table>
 
