@@ -211,7 +211,7 @@
                 <div class="col-lg-5 mb-4 sticky-sidebar-wrapper">
                     <div class="order-summary-wrapper sticky-sidebar">
 
-                        <form class="form checkout-form" action="{{ route('place_order') }}" method="post">
+                        <form class="form checkout-form" action="{{ route('place_order') }}" method="post" id="placeOrder" data-stripe-publishable-key="{{ env('STRIPE_SECRET_KEY') }}">
                             @csrf
                             <h3 class="title text-uppercase ls-10">Your Order</h3>
                             <div class="order-summary">
@@ -312,6 +312,14 @@
                                 </div>
                             </div>
                         </form>
+
+                        {{--<form action="{{ route('handlePayment') }}" method="POST" class="mt-5">
+                            @csrf
+                            <input type="hidden" name="amount" value="100">
+                            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="{{ env('STRIPE_PUBLISH_KEY') }}" data-amount="100" data-name="Bazzary" data-description="Payment for your product or service" data-image="https://stripe.com/img/documentation/checkout/marketplace.png" data-locale="auto" data-currency="usd" data-allow-remember-me="false" data-email="chhaider10954@gmail.com" data-billing-address="true" data-shipping-address="true" data-zip-code="true" data-alipay="false" data-bitcoin="false" data-label="Pay Now" data-panel-label="Pay" data-locale="auto">
+                            </script>
+                            <input type="hidden" name="stripeToken" value="">
+                        </form>--}}
                     </div>
                 </div>
             </div>
@@ -322,6 +330,7 @@
 @endsection
 
 @section('custom-scripts')
+<script src="https://js.stripe.com/v3/"></script>
 <script>
     $("#loginForm").on('submit', function(e) {
         e.preventDefault();
