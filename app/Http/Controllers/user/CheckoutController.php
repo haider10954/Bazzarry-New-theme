@@ -58,20 +58,39 @@ class CheckoutController extends Controller
     public function Shipping_address(Request $request)
     {
         $billing_details = Billing_detail::where('user_id', auth()->id())->first();
-        $shipping_address = Shipping_detail::UpdateOrCreate([
-            'billing_details' => $billing_details->id
-        ], [
-            'billing_details' => $billing_details->id,
-            'name' => $billing_details->name,
-            'email' => $billing_details->email,
-            'last_name' => $billing_details->last_name,
-            'address' => $billing_details->address,
-            'country_id' => $billing_details->country_id,
-            'state_id' => $billing_details->state_id,
-            'city_id' => $billing_details->city_id,
-            'postCode' => $billing_details->postCode,
-            'Order_notes' => $request['order-notes'] ?? NULL,
-        ]);
+        if ($request->has('shipping_toggle') == true) {
+            $shipping_address = Shipping_detail::UpdateOrCreate([
+                'billing_details' => $billing_details->id
+            ], [
+                'billing_details' => $billing_details->id,
+                'name' => $billing_details->name,
+                'email' => $billing_details->email,
+                'last_name' => $billing_details->last_name,
+                'address' => $billing_details->address,
+                'country_id' => $billing_details->country_id,
+                'state_id' => $billing_details->state_id,
+                'city_id' => $billing_details->city_id,
+                'postCode' => $billing_details->postCode,
+                'Order_notes' => $request['order-notes'] ?? NULL,
+            ]);
+        } else {
+            $shipping_address = Shipping_detail::UpdateOrCreate([
+                'billing_details' => $billing_details->id
+            ], [
+                'billing_details' => $billing_details->id,
+                'name' => $request->shipping_name,
+                'email' => $billing_details->email,
+                'last_name' => $request->shipping_lastname,
+                'address' => $request->address_1 . ' ' . $request->address_2,
+                'country_id' => $billing_details->country_id,
+                'state_id' => $billing_details->state_id,
+                'city_id' => $billing_details->city_id,
+                'postCode' => $request->postcode,
+                'Order_notes' => $request['order-notes'] ?? NULL,
+            ]);
+        }
+
+
 
         if ($shipping_address) {
             return json_encode([
@@ -105,13 +124,13 @@ class CheckoutController extends Controller
 
         session()->forget('cart');
         if ($place_order) {
-            return redirect()->route('order',$place_order->order_id);
+            return redirect()->route('order', $place_order->order_id);
         }
     }
 
     public function generate_invoice($orderNumber)
     {
-        $order = Order::query()->with('getBillingAddress')->where('user_id', auth()->id())->where('order_id',$orderNumber)->first();
+        $order = Order::query()->with('getBillingAddress')->where('user_id', auth()->id())->where('order_id', $orderNumber)->first();
         return view('user.pages.order', compact('order'));
     }
 }

@@ -154,20 +154,56 @@
                         </div>
                         <div class="form-group mb-7">
                             <div>
-                                <button type="submit" id="submitBillingForm" class="btn btn-dark btn-block btn-rounded">Save Address</button>
+                                <button type="submit" id="submitBillingForm" class="btn btn-dark btn-block btn-rounded">Save Billing Address</button>
                             </div>
                         </div>
 
                     </form>
 
-                    <form class="form checkout-form" action="#" method="post">
+                    <form class="form checkout-form" id="shipping">
+                        @csrf
+                        <h3 class="title billing-title text-uppercase ls-10 pt-1 pb-3 mb-0">
+                            Shipping Details
+                        </h3>
                         <div class="form-group pb-2">
-                            <input type="checkbox" class="custom-checkbox" id="shipping" name="shipping-toggle">
-                            <label for="shipping-toggle">Same as Billing Address?</label>
+                            <input type="checkbox" class="custom-checkbox" name="shipping_toggle">
+                            <label for="shipping-toggle">Ship to a Same address?</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Name *</label>
+                                    <input type="text" class="form-control form-control-md" name="shipping_name">
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Last name *</label>
+                                    <input type="text" class="form-control form-control-md" name="shipping_lastname">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Street address *</label>
+                            <input type="text" placeholder="House number and street name" class="form-control form-control-md mb-2" name="address_1">
+                            <input type="text" placeholder="Apartment, suite, unit, etc. (optional)" class="form-control form-control-md" name="address_2">
+                        </div>
+                        <div class="row gutter-sm">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Postcode *</label>
+                                    <input type="text" class="form-control form-control-md" name="postcode">
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group mt-3">
                             <label for="order-notes">Order notes (optional)</label>
                             <textarea class="form-control mb-0" id="order-notes" name="order-notes" cols="30" rows="4" placeholder="Notes about your order, e.g special notes for delivery"></textarea>
+                        </div>
+                        <div class="form-group mt-3">
+                            <div>
+                                <button type="submit" class="btn btn-dark btn-block btn-rounded">Save Shipping Address</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -254,7 +290,7 @@
                                         </li>
                                         <li>
                                             <div class="custom-radio">
-                                                <input type="radio" id="Cash-On-Dilivery"  class="custom-control-input" name="payment_method" value="Cash On Dilivery">
+                                                <input type="radio" id="Cash-On-Dilivery" class="custom-control-input" name="payment_method" value="Cash On Dilivery">
                                                 <label for="Cash-On-Dilivery" class="custom-control-label color-dark">Cash On Delivery</label>
                                             </div>
                                         </li>
@@ -350,18 +386,17 @@
         });
     });
 
-    $('#shipping').on('change', function(e) {
-        const csrfToken = document
-            .querySelector('meta[name="csrf-token"]')
-            .getAttribute("content");
-        $.ajaxSetup({
-            headers: {
-                "X-CSRF-TOKEN": csrfToken,
-            },
-        });
+    $('#shipping').on('submit', function(e) {
+        e.preventDefault();
+        var formData = new FormData($("#shipping")[0]);
         $.ajax({
             type: "POST",
             url: "{{ route('shipping-address') }}",
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            cache: false,
+            data: formData,
             beforeSend: function() {},
             success: function(res) {
                 if (res.success === true) {
