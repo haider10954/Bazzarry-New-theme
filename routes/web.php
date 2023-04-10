@@ -22,6 +22,9 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::post('/process-payment',[CheckoutController::class , 'processPayment'])->name('handlePayment');
+
 //Cities and States
 Route::post('fetch-states', [UserAuthController::class, 'fetchStates'])->name('CheckCountry');
 Route::post('fetch-cities', [UserAuthController::class, 'fetchCities'])->name('CheckState');

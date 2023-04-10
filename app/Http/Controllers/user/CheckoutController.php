@@ -11,6 +11,8 @@ use App\Models\Shipping_detail;
 use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Stripe\Stripe;
+use Stripe\Charge;
 
 use function GuzzleHttp\json_encode;
 
@@ -105,23 +107,49 @@ class CheckoutController extends Controller
         $billing_details = Billing_detail::where('user_id', auth()->id())->first();
         $shipping_details = Shipping_detail::where('billing_details', $billing_details->id)->first();
 
-        $orderNumber = Str::uuid()->toString();
-        $total = $request->total;
-        $payment_method = $request->payment_method;
-        $shipping_method = $request->shipping_method;
-        $cart_items = serialize(session()->get('cart'));
-        $place_order = Order::create([
-            'user_id' => auth()->id(),
-            'order_id' => $orderNumber,
-            'billing_address' => $billing_details->id,
-            'shipping_address' => $shipping_details->id,
-            'status' => 0,
-            'cart_items' => $cart_items,
-            'total' => $total,
-            'payment_method' => $payment_method,
-            'shipping_method' => $shipping_method,
-        ]);
+        if ($request->payment_method == "Direct Bank Transfer") {
+            Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+            $charge = Charge::create([
+                'amount' => 100,
+                'currency' => 'usd',
+                'source' => $request->stripeToken,
+                'description' => 'Payment for your product or service'
+            ]);
 
+            $orderNumber = Str::uuid()->toString();
+            $total = $request->total;
+            $payment_method = $request->payment_method;
+            $shipping_method = $request->shipping_method;
+            $cart_items = serialize(session()->get('cart'));
+            $place_order = Order::create([
+                'user_id' => auth()->id(),
+                'order_id' => $orderNumber,
+                'billing_address' => $billing_details->id,
+                'shipping_address' => $shipping_details->id,
+                'status' => 0,
+                'cart_items' => $cart_items,
+                'total' => $total,
+                'payment_method' => $payment_method,
+                'shipping_method' => $shipping_method,
+            ]);
+        } else {
+            $orderNumber = Str::uuid()->toString();
+            $total = $request->total;
+            $payment_method = $request->payment_method;
+            $shipping_method = $request->shipping_method;
+            $cart_items = serialize(session()->get('cart'));
+            $place_order = Order::create([
+                'user_id' => auth()->id(),
+                'order_id' => $orderNumber,
+                'billing_address' => $billing_details->id,
+                'shipping_address' => $shipping_details->id,
+                'status' => 0,
+                'cart_items' => $cart_items,
+                'total' => $total,
+                'payment_method' => $payment_method,
+                'shipping_method' => $shipping_method,
+            ]);
+        }
         session()->forget('cart');
         if ($place_order) {
             return redirect()->route('order', $place_order->order_id);
@@ -132,5 +160,18 @@ class CheckoutController extends Controller
     {
         $order = Order::query()->with('getBillingAddress')->where('user_id', auth()->id())->where('order_id', $orderNumber)->first();
         return view('user.pages.order', compact('order'));
+    }
+
+    public function processPayment(Request $request)
+    {
+        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+        $charge = Charge::create([
+            'amount' => 100,
+            'currency' => 'usd',
+            'source' => $request->stripeToken,
+            'description' => 'Payment for your product or service'
+        ]);
+        dd($charge);
+        // Process the payment and return a response
     }
 }
