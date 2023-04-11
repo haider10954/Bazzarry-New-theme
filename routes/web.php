@@ -48,6 +48,7 @@ Route::prefix('user')->group(function () {
 
         //Place Order
         Route::get('/order/{order_id}', [CheckoutController::class, 'generate_invoice'])->name('order');
+        Route::get('/stripe-redirect', [CheckoutController::class, 'storeStripePayment'])->name('stripe_redirect');
         Route::post('/order', [CheckoutController::class, 'place_order'])->name('place_order');
     });
 });

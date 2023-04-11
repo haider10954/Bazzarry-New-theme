@@ -246,14 +246,14 @@
                                                 <ul id="shipping-method" class="mb-4">
                                                     <li>
                                                         <div class="custom-radio">
-                                                            <input type="radio" id="free-shipping" class="custom-control-input" name="shipping_method" value="free">
+                                                            <input type="radio" id="free-shipping" class="custom-control-input" name="shipping_method" value="free" required>
                                                             <label for="free-shipping" class="custom-control-label color-dark">Free
                                                                 Shipping</label>
                                                         </div>
                                                     </li>
                                                     <li>
                                                         <div class="custom-radio">
-                                                            <input type="radio" id="flat-rate" class="custom-control-input" name="shipping_method" value="flat Rate">
+                                                            <input type="radio" id="flat-rate" class="custom-control-input" name="shipping_method" value="flat Rate" required>
                                                             <label for="flat-rate" class="custom-control-label color-dark">Flat
                                                                 rate: $5.00</label>
                                                         </div>
@@ -269,11 +269,16 @@
                                                 @php $total = 0 @endphp
                                                 @if (!empty(session()->get('cart')))
                                                 @foreach((array) session('cart') as $id => $details)
-                                                @php $total += $details['price'] * $details['quantity'] @endphp
+                                                @php
+
+                                                $total += $details['price'] * $details['quantity']
+                                                @endphp
                                                 @endforeach
                                                 @endif
-                                                <b>${{ !empty($total) ? $total : 0 }}</b>
-                                                <input type="hidden" name="total" value="{{ $total }}" />
+                                                @php $float = round($total);
+                                                @endphp
+                                                <b>${{ !empty($total) ? $total : 0 }}</b>      
+                                                <input type="hidden" name="total" value="{{ intval($float) }}" />
                                             </td>
                                         </tr>
                                     </tfoot>
@@ -284,8 +289,8 @@
                                     <ul id="shipping-method" class="mb-4" style="list-style: none;">
                                         <li>
                                             <div class="custom-radio">
-                                                <input type="radio" id="Direct-Bank-Transfer" class="custom-control-input" name="payment_method" value="Direct Bank Transfer">
-                                                <label for="Direct-Bank-Transfer" class="custom-control-label color-dark">Direct Bank Transfer</label>
+                                                <input type="radio" id="Direct-Bank-Transfer" class="custom-control-input" name="payment_method" value="Card Payment">
+                                                <label for="Direct-Bank-Transfer" class="custom-control-label color-dark">Card Payment</label>
                                             </div>
                                         </li>
                                         <li>
@@ -303,6 +308,37 @@
                                     </ul>
                                 </div>
 
+                                {{--<div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Card Number</label>
+                                            <input type="text" class="form-control form-control-md" name="card">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Name</label>
+                                            <input type="text" class="form-control form-control-md" name="card">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label>CVV</label>
+                                            <input type="text" class="form-control form-control-md" name="cvv">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Expiry Date</label>
+                                            <input type="text" class="form-control form-control-md" name="expiry" placeholder="MM/YYYY">
+                                        </div>
+                                    </div>
+                                </div>--}}
+
+
                                 <div class="form-group place-order pt-6">
                                     @if (auth()->check())
                                     <button type="submit" class="btn btn-dark btn-block btn-rounded">Place Order</button>
@@ -312,14 +348,6 @@
                                 </div>
                             </div>
                         </form>
-
-                        {{--<form action="{{ route('handlePayment') }}" method="POST" class="mt-5">
-                            @csrf
-                            <input type="hidden" name="amount" value="100">
-                            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="{{ env('STRIPE_PUBLISH_KEY') }}" data-amount="100" data-name="Bazzary" data-description="Payment for your product or service" data-image="https://stripe.com/img/documentation/checkout/marketplace.png" data-locale="auto" data-currency="usd" data-allow-remember-me="false" data-email="chhaider10954@gmail.com" data-billing-address="true" data-shipping-address="true" data-zip-code="true" data-alipay="false" data-bitcoin="false" data-label="Pay Now" data-panel-label="Pay" data-locale="auto">
-                            </script>
-                            <input type="hidden" name="stripeToken" value="">
-                        </form>--}}
                     </div>
                 </div>
             </div>

@@ -102,41 +102,105 @@ class CheckoutController extends Controller
         }
     }
 
+    public function redirectToStripe(Request $request)
+    {
+        $data = [];
+        $cart_items = session()->get('cart');
+
+        $order_details = session()->get('order_details', []);
+        $order_details = [
+            "total" => $request->total,
+            "payment_method" => $request->payment_method,
+            "shipping_method" => $request->shipping_method
+        ];
+        session()->put('order_details', $order_details);
+        foreach ($cart_items as $item) {
+            $data[] = [
+                'price_data' => [
+                    'currency' => 'pkr',
+                    'unit_amount' => $order_details['total'],
+                    'product_data' => [
+                        'name' => $item['product_name'],
+                    ],
+                ],
+                'quantity' => $item['quantity'],
+            ];
+        }
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
+
+        $session = $stripe->checkout->sessions->create([
+            'payment_method_types' => ['card'],
+            'line_items' => [$data],
+            'mode' => 'payment',
+            'success_url' => route('stripe_redirect') . '?id={CHECKOUT_SESSION_ID}&type=success',
+            'cancel_url' => route('stripe_redirect') . '?id={CHECKOUT_SESSION_ID}&type=error',
+        ]);
+
+        $session_url = $session->url;
+
+        return redirect($session_url);
+    }
+
+    public function storeStripePayment(Request $request)
+    {
+        $order_details = session()->get('order_details');
+        $billing_details = Billing_detail::where('user_id', auth()->id())->first();
+        $shipping_details = Shipping_detail::where('billing_details', $billing_details->id)->first();
+        if ($request->type == 'success') {
+            $stripe = new \Stripe\StripeClient(
+                env('STRIPE_SECRET_KEY')
+            );
+            $data = $stripe->checkout->sessions->retrieve(
+                $request->id,
+                []
+            );
+            $orderNumber = Str::uuid()->toString(2);
+            $total = $order_details['total'];
+            $payment_method = $order_details['payment_method'];
+            $shipping_method = $order_details['shipping_method'];
+            $cart_items = serialize(session()->get('cart'));
+            $place_order = Order::create([
+                'user_id' => auth()->id(),
+                'order_id' => $orderNumber,
+                'billing_address' => $billing_details->id,
+                'shipping_address' => $shipping_details->id,
+                'status' => 0,
+                'cart_items' => $cart_items,
+                'total' => $total,
+                'payment_method' => $payment_method,
+                'shipping_method' => $shipping_method,
+                'transcation_id' => $request->id
+            ]);
+            session()->forget('cart');
+            session()->forget('order_details');
+            if ($place_order) {
+                return redirect()->route('order', $place_order->order_id);
+            }
+        } else {
+            return redirect()->route('checkout');
+        }
+
+        // Id db Save
+
+
+    }
+
     public function place_order(Request $request)
     {
         $billing_details = Billing_detail::where('user_id', auth()->id())->first();
         $shipping_details = Shipping_detail::where('billing_details', $billing_details->id)->first();
-
-        if ($request->payment_method == "Direct Bank Transfer") {
-            Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-            $charge = Charge::create([
-                'amount' => 100,
-                'currency' => 'usd',
-                'source' => $request->stripeToken,
-                'description' => 'Payment for your product or service'
-            ]);
-
-            $orderNumber = Str::uuid()->toString();
-            $total = $request->total;
-            $payment_method = $request->payment_method;
-            $shipping_method = $request->shipping_method;
-            $cart_items = serialize(session()->get('cart'));
-            $place_order = Order::create([
-                'user_id' => auth()->id(),
-                'order_id' => $orderNumber,
-                'billing_address' => $billing_details->id,
-                'shipping_address' => $shipping_details->id,
-                'status' => 0,
-                'cart_items' => $cart_items,
-                'total' => $total,
-                'payment_method' => $payment_method,
-                'shipping_method' => $shipping_method,
-            ]);
+        if ($request->payment_method == "Card Payment") {
+            return $this->redirectToStripe($request);
         } else {
             $orderNumber = Str::uuid()->toString();
-            $total = $request->total;
+            if ($request->shipping_method == "flat Rate") {
+                $total = $request->total - ($request->total * 5 / 100);
+            } else {
+                $total = $request->total;
+            }
             $payment_method = $request->payment_method;
             $shipping_method = $request->shipping_method;
+            $transcation_id = 'COD-' . Str::uuid()->toString(2);
             $cart_items = serialize(session()->get('cart'));
             $place_order = Order::create([
                 'user_id' => auth()->id(),
@@ -148,8 +212,10 @@ class CheckoutController extends Controller
                 'total' => $total,
                 'payment_method' => $payment_method,
                 'shipping_method' => $shipping_method,
+                'transcation_id' => $transcation_id
             ]);
         }
+
         session()->forget('cart');
         if ($place_order) {
             return redirect()->route('order', $place_order->order_id);
