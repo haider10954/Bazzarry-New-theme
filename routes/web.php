@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\AuthController;
+use App\Http\Controllers\admin\OrderController;
 use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\seller\ProductOfferController;
 use App\Http\Controllers\admin\SellerController;
@@ -97,6 +98,12 @@ Route::prefix('admin')->group(function () {
         Route::get('/customers', function () {
             return view('admin.pages.customers');
         })->name('admin-customers');
+
+        Route::get('/orders',[OrderController::class,'index'])->name('user-orders');
+        Route::post('/delete-order',[OrderController::class,'Delete_Record'])->name('delete-order');
+        Route::post('/update-order-status',[OrderController::class,'update_order_status'])->name('update-order-status');
+
+        Route::get('/order-details/{id}',[OrderController::class,'view_orders'])->name('order-detail');
 
         //Product
         Route::get('/product-variants', [\App\Http\Controllers\admin\ProductController::class, 'variants'])->name('product-variants');

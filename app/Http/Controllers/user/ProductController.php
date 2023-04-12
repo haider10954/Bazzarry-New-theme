@@ -24,7 +24,7 @@ class ProductController extends Controller
             ->where('status', 1)
             ->get();
 
-        // Get Review 
+        // Get Review
         $Product_review = Review::where('product_id', $product->id)->get();
 
         $firstReview = Review::where('product_id', $product->id)->first();
@@ -51,6 +51,7 @@ class ProductController extends Controller
         } else {
             $actualPrize = $product->price - ($product->discount  /100 * $product->price);
             $cart[$id] = [
+                "product_id" => $product->id,
                 "product_name" => $product->title,
                 "product_slug" => $product->slug,
                 "photo" => $product->thumbnail,
@@ -78,7 +79,7 @@ class ProductController extends Controller
             {
                 $cart[$request->id]["quantity"]++;
             }
-            
+
             session()->put('cart', $cart);
             return response()->json([
                 'success' => true,

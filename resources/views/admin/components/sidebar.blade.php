@@ -56,7 +56,7 @@
                         <i class="las la-box"></i> <span data-key="t-dashboards">Category</span> </a>
                 </li>
                 <li class="nav-item">
-                    <a href="javascript:void(0)" class="nav-link" data-key="t-ecommerce">
+                    <a href="{{route('user-orders')}}" class="nav-link" data-key="t-ecommerce">
                         <i class="las la-box"></i> <span data-key="t-apps">Orders</span> </a>
                 </li>
                 <li class="nav-item">

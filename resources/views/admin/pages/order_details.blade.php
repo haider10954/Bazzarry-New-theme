@@ -1,4 +1,4 @@
-@extends('admin.layout.layout',['useAssets'=>['dashboard','datatable','apexchat']])
+@extends('admin.layout.layout',['useAssets'=>['dashboard','datatable','apexchat','sweetAlert']])
 @section('title','Admin-Dashboard')
 @section('content')
     <div class="page-content">
@@ -25,7 +25,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex align-items-center">
-                                <h5 class="card-title flex-grow-1 mb-0">Order #VL2667</h5>
+                                <h5 class="card-title flex-grow-1 mb-0">Order {{$order->order_id}}</h5>
                                 <div class="flex-shrink-0">
                                     <a href="apps-invoices-details.html" class="btn btn-success btn-sm"><i class="ri-download-2-fill align-middle me-1"></i> Invoice</a>
                                 </div>
@@ -44,102 +44,49 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex">
-                                                <div class="flex-shrink-0 avatar-md bg-light rounded p-1">
-                                                    <img src="{{asset('admin_assets/images/products/img-8.png')}}" alt="" class="img-fluid d-block">
+                                    @foreach(unserialize($order->cart_items) as $item)
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex">
+                                                    <div class="flex-shrink-0 avatar-md bg-light rounded p-1">
+                                                        <img src="{{asset($item['photo'])}}" alt="" class="img-fluid d-block">
+                                                    </div>
+                                                    <div class="flex-grow-1 ms-3">
+                                                        <h5 class="fs-15"><a href="#" class="link-primary">{{($item['product_name'])}}</a></h5>
+                                                        <p class="text-muted mb-0">Color: <span class="fw-medium">Pink</span></p>
+                                                        <p class="text-muted mb-0">Size: <span class="fw-medium">M</span></p>
+                                                    </div>
                                                 </div>
-                                                <div class="flex-grow-1 ms-3">
-                                                    <h5 class="fs-15"><a href="apps-ecommerce-product-details.html" class="link-primary">Sweatshirt for Men (Pink)</a></h5>
-                                                    <p class="text-muted mb-0">Color: <span class="fw-medium">Pink</span></p>
-                                                    <p class="text-muted mb-0">Size: <span class="fw-medium">M</span></p>
+                                            </td>
+                                            <td>Rs. {{($item['price'])}}</td>
+                                            <td>{{($item['quantity'])}}</td>
+                                            <td>
+                                                @php
+                                                    $getReviews = Illuminate\Support\Facades\DB::table('reviews')->where('product_id', $item['product_id'])->get();
+                                                @endphp
+                                                <div class="text-warning fs-15">
+                                                    @if(!empty($getReviews))
+                                                        <span>No Reviews</span>
+                                                    @else
+                                                        <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-half-fill"></i>
+                                                    @endif
+
+
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td>$119.99</td>
-                                        <td>02</td>
-                                        <td>
-                                            <div class="text-warning fs-15">
-                                                <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-half-fill"></i>
-                                            </div>
-                                        </td>
-                                        <td class="fw-medium text-end">
-                                            $239.98
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex">
-                                                <div class="flex-shrink-0 avatar-md bg-light rounded p-1">
-                                                    <img src="{{asset('admin_assets/images/products/img-7.png')}}" alt="" class="img-fluid d-block">
-                                                </div>
-                                                <div class="flex-grow-1 ms-3">
-                                                    <h5 class="fs-15"><a href="apps-ecommerce-product-details.html" class="link-primary">Noise NoiseFit Endure Smart Watch</a></h5>
-                                                    <p class="text-muted mb-0">Color: <span class="fw-medium">Black</span></p>
-                                                    <p class="text-muted mb-0">Size: <span class="fw-medium">32.5mm</span></p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>$94.99</td>
-                                        <td>01</td>
-                                        <td>
-                                            <div class="text-warning fs-15">
-                                                <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-half-fill"></i>
-                                            </div>
-                                        </td>
-                                        <td class="fw-medium text-end">
-                                            $94.99
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex">
-                                                <div class="flex-shrink-0 avatar-md bg-light rounded p-1">
-                                                    <img src="{{asset('admin_assets/images/products/img-3.png')}}" alt="" class="img-fluid d-block">
-                                                </div>
-                                                <div class="flex-grow-1 ms-3">
-                                                    <h5 class="fs-15"><a href="apps-ecommerce-product-details.html" class="link-primary">350 ml Glass Grocery Container</a></h5>
-                                                    <p class="text-muted mb-0">Color: <span class="fw-medium">White</span></p>
-                                                    <p class="text-muted mb-0">Size: <span class="fw-medium">350 ml</span></p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>$24.99</td>
-                                        <td>01</td>
-                                        <td>
-                                            <div class="text-warning fs-15">
-                                                <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-half-fill"></i><i class="ri-star-line"></i><i class="ri-star-line"></i>
-                                            </div>
-                                        </td>
-                                        <td class="fw-medium text-end">
-                                            $24.99
-                                        </td>
-                                    </tr>
+                                            </td>
+                                            <td class="fw-medium text-end">
+                                                Rs. {{($item['price']*$item['quantity'])}}
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                     <tr class="border-top border-top-dashed">
                                         <td colspan="3"></td>
                                         <td colspan="2" class="fw-medium p-0">
                                             <table class="table table-borderless mb-0">
                                                 <tbody>
-                                                <tr>
-                                                    <td>Sub Total :</td>
-                                                    <td class="text-end">$359.96</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Discount <span class="text-muted">(VELZON15)</span> : :</td>
-                                                    <td class="text-end">-$53.99</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Shipping Charge :</td>
-                                                    <td class="text-end">$65.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Estimated Tax :</td>
-                                                    <td class="text-end">$44.99</td>
-                                                </tr>
                                                 <tr class="border-top border-top-dashed">
-                                                    <th scope="row">Total (USD) :</th>
-                                                    <th class="text-end">$415.96</th>
+                                                    <th scope="row">Total (PKR) :</th>
+                                                    <th class="text-end">Rs. {{ $order->total }}</th>
                                                 </tr>
                                                 </tbody>
                                             </table>
@@ -156,8 +103,7 @@
                             <div class="d-sm-flex align-items-center">
                                 <h5 class="card-title flex-grow-1 mb-0">Order Status</h5>
                                 <div class="flex-shrink-0 mt-2 mt-sm-0">
-                                    <a href="javasccript:void(0;)" class="btn btn-soft-info btn-sm mt-2 mt-sm-0"><i class="ri-map-pin-line align-middle me-1"></i> Change Address</a>
-                                    <a href="javasccript:void(0;)" class="btn btn-soft-danger btn-sm mt-2 mt-sm-0"><i class="mdi mdi-archive-remove-outline align-middle me-1"></i> Cancel Order</a>
+                                    <a href="javasccript:void(0;)" class="btn btn-soft-danger btn-sm mt-2 mt-sm-0 cancel-order" data-id="{{$order->id}}"><i class="mdi mdi-archive-remove-outline align-middle me-1"></i> Cancel Order</a>
                                 </div>
                             </div>
                         </div>
@@ -174,7 +120,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="flex-grow-1 ms-3">
-                                                        <h6 class="fs-15 mb-0 fw-semibold">Order Placed - <span class="fw-normal">Wed, 15 Dec 2021</span></h6>
+                                                        <h6 class="fs-15 mb-0 fw-semibold">Order Placed - <span class="fw-normal">{{\Carbon\Carbon::parse($order->created_at)->format('M d, Y')}}</span></h6>
                                                     </div>
                                                 </div>
                                             </a>
@@ -182,178 +128,60 @@
                                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                             <div class="accordion-body ms-2 ps-5 pt-0">
                                                 <h6 class="mb-1">An order has been placed.</h6>
-                                                <p class="text-muted">Wed, 15 Dec 2021 - 05:34PM</p>
+                                                <p class="text-muted">{{\Carbon\Carbon::parse($order->created_at)->format('M d, Y')}}</p>
 
                                                 <h6 class="mb-1">Seller has proccessed your order.</h6>
-                                                <p class="text-muted mb-0">Thu, 16 Dec 2021 - 5:48AM</p>
+                                                <p class="text-muted mb-0">{{\Carbon\Carbon::parse($order->updated_at)->format('M d, Y')}}</p>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="accordion-item border-0">
-                                        <div class="accordion-header" id="headingTwo">
-                                            <a class="accordion-button p-2 shadow-none" data-bs-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="flex-shrink-0 avatar-xs">
-                                                        <div class="avatar-title bg-success rounded-circle">
-                                                            <i class="mdi mdi-gift-outline"></i>
+                                    @if($order->status===1)
+                                        <div class="accordion-item border-0">
+                                            <div class="accordion-header" id="headingThree">
+                                                <a class="accordion-button p-2 shadow-none" data-bs-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="flex-shrink-0 avatar-xs">
+                                                            <div class="avatar-title bg-success rounded-circle">
+                                                                <i class="ri-truck-line"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex-grow-1 ms-3">
+                                                            <h6 class="fs-15 mb-1 fw-semibold">Shipping - <span class="fw-normal">Thu, 16 Dec 2021</span></h6>
                                                         </div>
                                                     </div>
-                                                    <div class="flex-grow-1 ms-3">
-                                                        <h6 class="fs-15 mb-1 fw-semibold">Packed - <span class="fw-normal">Thu, 16 Dec 2021</span></h6>
-                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body ms-2 ps-5 pt-0">
+                                                    <h6 class="fs-14">RQK Logistics - MFDS1400457854</h6>
+                                                    <h6 class="mb-1">Your item has been shipped.</h6>
+                                                    <p class="text-muted mb-0">Sat, 18 Dec 2021 - 4.54PM</p>
                                                 </div>
-                                            </a>
-                                        </div>
-                                        <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                            <div class="accordion-body ms-2 ps-5 pt-0">
-                                                <h6 class="mb-1">Your Item has been picked up by courier patner</h6>
-                                                <p class="text-muted mb-0">Fri, 17 Dec 2021 - 9:45AM</p>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="accordion-item border-0">
-                                        <div class="accordion-header" id="headingThree">
-                                            <a class="accordion-button p-2 shadow-none" data-bs-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="flex-shrink-0 avatar-xs">
-                                                        <div class="avatar-title bg-success rounded-circle">
-                                                            <i class="ri-truck-line"></i>
+                                        <div class="accordion-item border-0">
+                                            <div class="accordion-header" id="headingFive">
+                                                <a class="accordion-button p-2 shadow-none" data-bs-toggle="collapse" href="#collapseFile" aria-expanded="false">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="flex-shrink-0 avatar-xs">
+                                                            <div class="avatar-title bg-success text-white rounded-circle">
+                                                                <i class="mdi mdi-package-variant"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex-grow-1 ms-3">
+                                                            <h6 class="fs-14 mb-0 fw-semibold">Delivered</h6>
                                                         </div>
                                                     </div>
-                                                    <div class="flex-grow-1 ms-3">
-                                                        <h6 class="fs-15 mb-1 fw-semibold">Shipping - <span class="fw-normal">Thu, 16 Dec 2021</span></h6>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                                            <div class="accordion-body ms-2 ps-5 pt-0">
-                                                <h6 class="fs-14">RQK Logistics - MFDS1400457854</h6>
-                                                <h6 class="mb-1">Your item has been shipped.</h6>
-                                                <p class="text-muted mb-0">Sat, 18 Dec 2021 - 4.54PM</p>
+                                                </a>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="accordion-item border-0">
-                                        <div class="accordion-header" id="headingFour">
-                                            <a class="accordion-button p-2 shadow-none" data-bs-toggle="collapse" href="#collapseFour" aria-expanded="false">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="flex-shrink-0 avatar-xs">
-                                                        <div class="avatar-title bg-light text-success rounded-circle">
-                                                            <i class="ri-takeaway-fill"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex-grow-1 ms-3">
-                                                        <h6 class="fs-14 mb-0 fw-semibold">Out For Delivery</h6>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="accordion-item border-0">
-                                        <div class="accordion-header" id="headingFive">
-                                            <a class="accordion-button p-2 shadow-none" data-bs-toggle="collapse" href="#collapseFile" aria-expanded="false">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="flex-shrink-0 avatar-xs">
-                                                        <div class="avatar-title bg-light text-success rounded-circle">
-                                                            <i class="mdi mdi-package-variant"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex-grow-1 ms-3">
-                                                        <h6 class="fs-14 mb-0 fw-semibold">Delivered</h6>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
+                                    @endif
                                 </div>
                                 <!--end accordion-->
                             </div>
                         </div>
                     </div>
                     <!--end card-->
-                </div>
-                <!--end col-->
-                <div class="col-xl-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="d-flex">
-                                <h5 class="card-title flex-grow-1 mb-0"><i class="mdi mdi-truck-fast-outline align-middle me-1 text-muted"></i> Logistics Details</h5>
-                                <div class="flex-shrink-0">
-                                    <a href="javascript:void(0);" class="badge badge-soft-primary fs-11">Track Order</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="text-center">
-                                <lord-icon src="https://cdn.lordicon.com/uetqnvvg.json" trigger="loop" colors="primary:#405189,secondary:#0ab39c" style="width:80px;height:80px"></lord-icon>
-                                <h5 class="fs-16 mt-2">RQK Logistics</h5>
-                                <p class="text-muted mb-0">ID: MFDS1400457854</p>
-                                <p class="text-muted mb-0">Payment Mode : Debit Card</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end card-->
-
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="d-flex">
-                                <h5 class="card-title flex-grow-1 mb-0">Customer Details</h5>
-                                <div class="flex-shrink-0">
-                                    <a href="javascript:void(0);" class="link-secondary">View Profile</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <ul class="list-unstyled mb-0 vstack gap-3">
-                                <li>
-                                    <div class="d-flex align-items-center">
-                                        <div class="flex-shrink-0">
-                                            <img src="{{asset('admin_assets/images/users/avatar-3.jpg')}}" alt="" class="avatar-sm rounded">
-                                        </div>
-                                        <div class="flex-grow-1 ms-3">
-                                            <h6 class="fs-14 mb-1">Joseph Parkers</h6>
-                                            <p class="text-muted mb-0">Customer</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li><i class="ri-mail-line me-2 align-middle text-muted fs-16"></i>josephparker@gmail.com</li>
-                                <li><i class="ri-phone-line me-2 align-middle text-muted fs-16"></i>+(256) 245451 441</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!--end card-->
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0"><i class="ri-map-pin-line align-middle me-1 text-muted"></i> Billing Address</h5>
-                        </div>
-                        <div class="card-body">
-                            <ul class="list-unstyled vstack gap-2 fs-13 mb-0">
-                                <li class="fw-medium fs-14">Joseph Parker</li>
-                                <li>+(256) 245451 451</li>
-                                <li>2186 Joyce Street Rocky Mount</li>
-                                <li>New York - 25645</li>
-                                <li>United States</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!--end card-->
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0"><i class="ri-map-pin-line align-middle me-1 text-muted"></i> Shipping Address</h5>
-                        </div>
-                        <div class="card-body">
-                            <ul class="list-unstyled vstack gap-2 fs-13 mb-0">
-                                <li class="fw-medium fs-14">Joseph Parker</li>
-                                <li>+(256) 245451 451</li>
-                                <li>2186 Joyce Street Rocky Mount</li>
-                                <li>California - 24567</li>
-                                <li>United States</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!--end card-->
-
                     <div class="card">
                         <div class="card-header">
                             <h5 class="card-title mb-0"><i class="ri-secure-payment-line align-bottom me-1 text-muted"></i> Payment Details</h5>
@@ -401,6 +229,92 @@
                             </div>
                         </div>
                     </div>
+
+                </div>
+                <!--end col-->
+                <div class="col-xl-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex">
+                                <h5 class="card-title flex-grow-1 mb-0"><i class="mdi mdi-truck-fast-outline align-middle me-1 text-muted"></i> Logistics Details</h5>
+                                <div class="flex-shrink-0">
+                                    <a href="javascript:void(0);" class="badge badge-soft-primary fs-11">Track Order</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center">
+                                <lord-icon src="https://cdn.lordicon.com/uetqnvvg.json" trigger="loop" colors="primary:#405189,secondary:#0ab39c" style="width:80px;height:80px"></lord-icon>
+                                <h5 class="fs-16 mt-2">RQK Logistics</h5>
+                                <p class="text-muted mb-0">ID: MFDS1400457854</p>
+                                <p class="text-muted mb-0">Payment Mode : Debit Card</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end card-->
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex">
+                                <h5 class="card-title flex-grow-1 mb-0">Customer Details</h5>
+                                <div class="flex-shrink-0">
+                                    <a href="javascript:void(0);" class="link-secondary">View Profile</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mb-0 vstack gap-3">
+                                <li>
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0">
+                                            @if(!empty($order->getUser->avatar))
+                                                <img src="{{asset($order->getUser->avatar)}}" alt="" class="avatar-sm rounded">
+
+                                            @else
+                                                <img src="{{asset('admin_assets/images/users/avatar-3.jpg')}}" alt="" class="avatar-sm rounded">
+                                            @endif
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6 class="fs-14 mb-1">{{$order->getUser->name}}</h6>
+                                            <p class="text-muted mb-0">Customer</p>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li><i class="ri-mail-line me-2 align-middle text-muted fs-16"></i>{{$order->getUser->email}}</li>
+                                <li><i class="ri-phone-line me-2 align-middle text-muted fs-16"></i>{{!empty($order->getUser->phone)?$order->getUser->phone:'No Number'}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!--end card-->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0"><i class="ri-map-pin-line align-middle me-1 text-muted"></i> Billing Address</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled vstack gap-2 fs-13 mb-0">
+                                <li class="fw-medium fs-14">{{$order->getBillingAddress->name}}</li>
+                                <li>{{$order->getBillingAddress->postCode}}</li>
+                                <li>{{$order->getBillingAddress->address}}</li>
+                                <li>{{$order->getBillingAddress->getUser->getCity->name}}</li>
+                                <li>{{$order->getBillingAddress->getUser->getCountry->name}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!--end card-->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0"><i class="ri-map-pin-line align-middle me-1 text-muted"></i> Shipping Address</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled vstack gap-2 fs-13 mb-0">
+                                <li class="fw-medium fs-14">{{$order->getShippingAddress->name}}</li>
+                                <li>{{$order->getShippingAddress->address}}</li>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <!--end card-->
+
                     <!--end card-->
                 </div>
                 <!--end col-->
@@ -410,4 +324,54 @@
         </div><!-- container-fluid -->
     </div>
 @endsection
+@section('custom-script')
+    <script>
+        $(document).on('click', '.cancel-order', function () {
+            var id = $(this).attr('data-id');
 
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, update it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('update-order-status') }}",
+                        dataType: 'json',
+                        data: {
+                            id: id,
+                            _token: '{{csrf_token()}}',
+                        },
+
+                        beforeSend: function () {
+                        },
+                        success: function (res) {
+                            if (res.success === true) {
+                                setTimeout(function () {
+                                    Swal.fire('Success!', res.message, 'success');
+                                }, 1500);
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 3000);
+                            } else {
+                                setTimeout(function () {
+                                    Swal.fire('Danger!', res.message, 'success');
+                                }, 1500);
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 3000);
+                            }
+                        },
+                        error: function (e) {
+                        }
+                    });
+                }
+            })
+        });
+    </script>
+@endsection

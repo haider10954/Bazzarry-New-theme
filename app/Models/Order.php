@@ -22,4 +22,8 @@ class Order extends Model
     {
         return $this->hasOne(Shipping_detail::class , 'id' , 'shipping_address');
     }
+    public function getUser()
+    {
+        return $this->hasOne(User::class , 'id' , 'user_id');
+    }
 }
