@@ -277,7 +277,7 @@
                                                 @endif
                                                 @php $float = round($total);
                                                 @endphp
-                                                <b>${{ !empty($total) ? $total : 0 }}</b>      
+                                                <b>${{ !empty($total) ? $total : 0 }}</b>
                                                 <input type="hidden" name="total" value="{{ intval($float) }}" />
                                             </td>
                                         </tr>
@@ -289,8 +289,8 @@
                                     <ul id="shipping-method" class="mb-4" style="list-style: none;">
                                         <li>
                                             <div class="custom-radio">
-                                                <input type="radio" id="Direct-Bank-Transfer" class="custom-control-input" name="payment_method" value="Card Payment">
-                                                <label for="Direct-Bank-Transfer" class="custom-control-label color-dark">Card Payment</label>
+                                                <input type="radio" id="Direct-Bank-Transfer" class="custom-control-input" name="payment_method" value="Stripe">
+                                                <label for="Direct-Bank-Transfer" class="custom-control-label color-dark">Stripe</label>
                                             </div>
                                         </li>
                                         <li>
@@ -301,8 +301,8 @@
                                         </li>
                                         <li>
                                             <div class="custom-radio">
-                                                <input type="radio" id="Easy-Paisa" class="custom-control-input" name="payment_method" value="Easy Paisa">
-                                                <label for="Easy-Paisa" class="custom-control-label color-dark">Easy Paisa</label>
+                                                <input type="radio" id="Easy-Paisa" class="custom-control-input" name="payment_method" value="Paypal">
+                                                <label for="Easy-Paisa" class="custom-control-label color-dark">Paypal</label>
                                             </div>
                                         </li>
                                     </ul>

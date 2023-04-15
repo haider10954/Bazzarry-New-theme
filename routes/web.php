@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/process-payment',[CheckoutController::class , 'processPayment'])->name('handlePayment');
+Route::post('/process-payment', [CheckoutController::class, 'processPayment'])->name('handlePayment');
 
 //Cities and States
 Route::post('fetch-states', [UserAuthController::class, 'fetchStates'])->name('CheckCountry');
@@ -39,7 +39,7 @@ Route::get('/user/logout', [UserAuthController::class, 'userlogout'])->name('use
 Route::prefix('user')->group(function () {
 
     Route::middleware('auth')->group(function () {
-        Route::get('/profile', [UserAuthController::class , 'userProfileView'])->name('user-profile');
+        Route::get('/profile', [UserAuthController::class, 'userProfileView'])->name('user-profile');
         Route::post('/updateProfile', [UserAuthController::class, 'userProfileUpdate'])->name('updateUserProfile');
 
 
@@ -99,11 +99,11 @@ Route::prefix('admin')->group(function () {
             return view('admin.pages.customers');
         })->name('admin-customers');
 
-        Route::get('/orders',[OrderController::class,'index'])->name('user-orders');
-        Route::post('/delete-order',[OrderController::class,'Delete_Record'])->name('delete-order');
-        Route::post('/update-order-status',[OrderController::class,'update_order_status'])->name('update-order-status');
+        Route::get('/orders', [OrderController::class, 'index'])->name('user-orders');
+        Route::post('/delete-order', [OrderController::class, 'Delete_Record'])->name('delete-order');
+        Route::post('/update-order-status', [OrderController::class, 'update_order_status'])->name('update-order-status');
 
-        Route::get('/order-details/{id}',[OrderController::class,'view_orders'])->name('order-detail');
+        Route::get('/order-details/{id}', [OrderController::class, 'view_orders'])->name('order-detail');
 
         //Product
         Route::get('/product-variants', [\App\Http\Controllers\admin\ProductController::class, 'variants'])->name('product-variants');
@@ -246,3 +246,8 @@ Route::prefix('seller')->group(function () {
 
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+//Paypal routes
+Route::get('/sucess', [CheckoutController::class, 'executePayPalPayment'])->name('paypal.executePayment');
+Route::get('/error', [CheckoutController::class, 'cancelPayment'])->name('paypal.cancelPayment');

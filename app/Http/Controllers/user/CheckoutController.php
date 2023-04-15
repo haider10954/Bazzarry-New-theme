@@ -13,11 +13,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Stripe\Stripe;
 use Stripe\Charge;
+use GuzzleHttp\Client;
 
+use PayPal\Api\Amount;
+use PayPal\Api\Details;
+use PayPal\Api\Item;
+use PayPal\Api\ItemList;
+use PayPal\Api\Payer;
+use PayPal\Api\Payment;
+use PayPal\Api\PaymentExecution;
+use PayPal\Api\RedirectUrls;
+use PayPal\Api\Transaction;
 use function GuzzleHttp\json_encode;
 
 class CheckoutController extends Controller
 {
+    //Check out Page
     public function index()
     {
         $country = Country::get();
@@ -26,6 +37,7 @@ class CheckoutController extends Controller
         return view('user.pages.checkout', compact('country', 'city', 'state'));
     }
 
+    //Billing Address
     public function billing_address(Request $request)
     {
         $request->validate([
@@ -57,6 +69,7 @@ class CheckoutController extends Controller
         }
     }
 
+    //Shipping Address
     public function Shipping_address(Request $request)
     {
         $billing_details = Billing_detail::where('user_id', auth()->id())->first();
@@ -101,6 +114,8 @@ class CheckoutController extends Controller
             ]);
         }
     }
+
+    // Stripe
 
     public function redirectToStripe(Request $request)
     {
@@ -185,12 +200,145 @@ class CheckoutController extends Controller
 
     }
 
+    //Pay Pal
+
+    public function getAccessToken()
+    {
+        // Get the API credentials from the configuration file
+        $clientId = 'Adt6D_5-xgpP2bMk11THjzJ6QiUJJ2c6pOQcmY2fO1QsdOqe_QVQrzxGOPEkDEKPfS7gTOLhfvt6_-le';
+        $clientSecret = 'EGg1qNXjNLUt_L9FiJXxL1qLTwjKcToIgtk-LR1-cmHp1ncwrReRnb3QiJhXcjWSVE0N8OumYft2YEoB';
+
+        // Define the OAuth 2.0 endpoint URL
+        $url = 'https://api.sandbox.paypal.com/v1/oauth2/token';
+
+        // Create a new Guzzle HTTP client instance
+        $client = new Client();
+
+        // Send a POST request to the OAuth 2.0 endpoint with the API credentials
+        $response = $client->post($url, [
+            'auth' => [$clientId, $clientSecret],
+            'form_params' => [
+                'grant_type' => 'client_credentials'
+            ]
+        ]);
+
+        // Parse the JSON response and extract the access token
+        $data = json_decode($response->getBody(), true);
+        $accessToken = $data['access_token'];
+
+        // Cache the access token for an hour
+        cache(['paypal_access_token' => $accessToken], now()->addHour());
+
+        return $accessToken;
+    }
+
+    public function createPaypalPayment(Request $request)
+    {
+        // Set up the PayPal SDK with your client ID and secret
+        $apiContext = new \PayPal\Rest\ApiContext(
+            new \PayPal\Auth\OAuthTokenCredential(
+                'Adt6D_5-xgpP2bMk11THjzJ6QiUJJ2c6pOQcmY2fO1QsdOqe_QVQrzxGOPEkDEKPfS7gTOLhfvt6_-le', // Client ID
+                'EGg1qNXjNLUt_L9FiJXxL1qLTwjKcToIgtk-LR1-cmHp1ncwrReRnb3QiJhXcjWSVE0N8OumYft2YEoB' // Client Secret
+            )
+        );
+
+        // Create a new payer object and set payment method to PayPal
+        $payer = new Payer();
+        $payer->setPaymentMethod('paypal');
+
+        // Set up the item details
+        $item = new Item();
+        $item->setName('My Item')
+            ->setCurrency('PKR')
+            ->setQuantity(1)
+            ->setPrice('10');
+
+        $data = array($item);
+        dd($data);
+        $itemList = new ItemList();
+        $itemList->setItems();
+
+        // Set up the transaction details
+        $transaction = new Transaction();
+        $transaction->setItemList($itemList)
+            ->setDescription('My Item')
+            ->setAmount(new Amount([
+                'total' => '10.00',
+                'currency' => 'USD',
+                'details' => new Details([
+                    'subtotal' => '10.00',
+                    'tax' => '0.00',
+                    'shipping' => '0.00'
+                ])
+            ]));
+
+        // Set up the redirect URLs
+        $redirectUrls = new RedirectUrls();
+        $redirectUrls->setReturnUrl(route('paypal.executePayment'))
+            ->setCancelUrl(route('paypal.cancelPayment'));
+
+        // Create the payment object
+        $payment = new Payment();
+        $payment->setIntent('sale')
+            ->setPayer($payer)
+            ->setRedirectUrls($redirectUrls)
+            ->setTransactions([$transaction]);
+
+        // Create the payment
+        $payment->create($apiContext);
+
+        // Get the approval URL and redirect the user
+        foreach ($payment->getLinks() as $link) {
+            if ($link->getRel() === 'approval_url') {
+                $redirectUrl = $link->getHref();
+                return redirect()->away($redirectUrl);
+            }
+        }
+
+        dd('error');
+    }
+
+    public function executePayPalPayment(Request $request)
+    {
+        $payerId = $request->get('PayerID');
+        $paymentId = $request->get('paymentId');
+
+        $client = new Client();
+        $response = $client->post("https://api.sandbox.paypal.com/v1/payments/payment/$paymentId/execute", [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $this->getAccessToken()
+            ],
+            'json' => [
+                'payer_id' => $payerId,
+                'transactions' => [
+                    [
+                        'amount' => [
+                            'total' => '10.00',
+                            'currency' => 'USD'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+        dd($data);
+    }
+
+    public function cancelPayment()
+    {
+        return 'Payment cancelled';
+    }
+
     public function place_order(Request $request)
     {
         $billing_details = Billing_detail::where('user_id', auth()->id())->first();
         $shipping_details = Shipping_detail::where('billing_details', $billing_details->id)->first();
-        if ($request->payment_method == "Card Payment") {
+        if ($request->payment_method == "Stripe") {
             return $this->redirectToStripe($request);
+        } elseif ($request->payment_method == "Paypal") {
+            return $this->createPaypalPayment($request);
         } else {
             $orderNumber = Str::uuid()->toString();
             if ($request->shipping_method == "flat Rate") {
