@@ -9,21 +9,13 @@ use App\Models\City;
 use App\Models\Order;
 use App\Models\Shipping_detail;
 use App\Models\State;
+use App\Packages\Paypal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Stripe\Stripe;
 use Stripe\Charge;
 use GuzzleHttp\Client;
 
-use PayPal\Api\Amount;
-use PayPal\Api\Details;
-use PayPal\Api\Item;
-use PayPal\Api\ItemList;
-use PayPal\Api\Payer;
-use PayPal\Api\Payment;
-use PayPal\Api\PaymentExecution;
-use PayPal\Api\RedirectUrls;
-use PayPal\Api\Transaction;
 use function GuzzleHttp\json_encode;
 
 class CheckoutController extends Controller
@@ -234,96 +226,35 @@ class CheckoutController extends Controller
 
     public function createPaypalPayment(Request $request)
     {
-        // Set up the PayPal SDK with your client ID and secret
-        $apiContext = new \PayPal\Rest\ApiContext(
-            new \PayPal\Auth\OAuthTokenCredential(
-                'Adt6D_5-xgpP2bMk11THjzJ6QiUJJ2c6pOQcmY2fO1QsdOqe_QVQrzxGOPEkDEKPfS7gTOLhfvt6_-le', // Client ID
-                'EGg1qNXjNLUt_L9FiJXxL1qLTwjKcToIgtk-LR1-cmHp1ncwrReRnb3QiJhXcjWSVE0N8OumYft2YEoB' // Client Secret
-            )
-        );
 
-        // Create a new payer object and set payment method to PayPal
-        $payer = new Payer();
-        $payer->setPaymentMethod('paypal');
-
-        // Set up the item details
-        $item = new Item();
-        $item->setName('My Item')
-            ->setCurrency('PKR')
-            ->setQuantity(1)
-            ->setPrice('10');
-
-        $data = array($item);
-        dd($data);
-        $itemList = new ItemList();
-        $itemList->setItems();
-
-        // Set up the transaction details
-        $transaction = new Transaction();
-        $transaction->setItemList($itemList)
-            ->setDescription('My Item')
-            ->setAmount(new Amount([
-                'total' => '10.00',
-                'currency' => 'USD',
-                'details' => new Details([
-                    'subtotal' => '10.00',
-                    'tax' => '0.00',
-                    'shipping' => '0.00'
-                ])
-            ]));
-
-        // Set up the redirect URLs
-        $redirectUrls = new RedirectUrls();
-        $redirectUrls->setReturnUrl(route('paypal.executePayment'))
-            ->setCancelUrl(route('paypal.cancelPayment'));
-
-        // Create the payment object
-        $payment = new Payment();
-        $payment->setIntent('sale')
-            ->setPayer($payer)
-            ->setRedirectUrls($redirectUrls)
-            ->setTransactions([$transaction]);
-
-        // Create the payment
-        $payment->create($apiContext);
-
-        // Get the approval URL and redirect the user
-        foreach ($payment->getLinks() as $link) {
-            if ($link->getRel() === 'approval_url') {
-                $redirectUrl = $link->getHref();
-                return redirect()->away($redirectUrl);
-            }
+        try{
+            $paypal = new Paypal();
+            $res = $paypal->createOrder(100);
+            session()->put('paypal_order_id',$res['id']);
+            session()->save();
+            return redirect($res['links'][1]['href']);
+        }catch (\Exception $e)
+        {
+            \Log::error($e->getMessage());
+            return false;
         }
-
-        dd('error');
     }
 
     public function executePayPalPayment(Request $request)
     {
-        $payerId = $request->get('PayerID');
-        $paymentId = $request->get('paymentId');
-
-        $client = new Client();
-        $response = $client->post("https://api.sandbox.paypal.com/v1/payments/payment/$paymentId/execute", [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $this->getAccessToken()
-            ],
-            'json' => [
-                'payer_id' => $payerId,
-                'transactions' => [
-                    [
-                        'amount' => [
-                            'total' => '10.00',
-                            'currency' => 'USD'
-                        ]
-                    ]
-                ]
-            ]
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-        dd($data);
+        try{
+            $paypal = new Paypal();
+            $res = $paypal->capturePayment(session('paypal_order_id'));
+            if(strtoupper($res['details'][0]['issue']) == 'ORDER_ALREADY_CAPTURED')
+            {
+                return true;
+            }
+            return isset($res['status']) && strtoupper($res['status']) == 'COMPLETED';
+        }catch (\Exception $e)
+        {
+            \Log::info($e->getMessage());
+            return true;
+        }
     }
 
     public function cancelPayment()
@@ -342,7 +273,7 @@ class CheckoutController extends Controller
         } else {
             $orderNumber = Str::uuid()->toString();
             if ($request->shipping_method == "flat Rate") {
-                $total = $request->total - ($request->total * 5 / 100);
+                $total = $request->total + ($request->total * 5 / 100);
             } else {
                 $total = $request->total;
             }
