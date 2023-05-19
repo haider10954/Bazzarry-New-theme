@@ -65,11 +65,10 @@ Route::get('/wishlist', function () {
     return view('user.pages.wishList');
 })->name('wishlist');
 
-Route::get('/products', function () {
-    return view('user.pages.products');
-})->name('products');
+Route::get('/products', [ProductController::class,'getAllProducts'])->name('products');
 
 Route::post('/add-to-cart', [ProductController::class, 'add_to_cart'])->name('add_to_cart');
+Route::post('/add-product-review', [\App\Http\Controllers\user\ProductReviewController::class, 'addReview'])->name('add_Review');
 Route::post('/delete-cart-items', [ProductController::class, 'remove'])->name('deleteCartItems');
 Route::post('/update-cart-items', [ProductController::class, 'update'])->name('updateCartItems');
 

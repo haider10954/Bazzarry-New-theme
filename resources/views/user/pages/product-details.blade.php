@@ -88,7 +88,7 @@
                         @php
                         $DiscountedPrice = $product->discount;
                         @endphp
-                        
+
                         @if (!empty($DiscountedPrice))
                         @php
                         $DiscountedPrice = $product->price - ($product->discount /100 * $product->price)
@@ -296,7 +296,9 @@
                                     </h3>
                                     <p class="mb-3">Your email address will not be published. Required fields
                                         are marked *</p>
-                                    <form action="#" method="POST" class="review-form">
+                                    <form id="reviewForm" class="review-form">
+                                        @csrf
+                                        <input type="hidden" value="{{$product->id}}" name="product_id">
                                         <div class="rating-form">
                                             <label for="rating">Your Rating Of This Product :</label>
                                             <span class="rating-stars">
@@ -315,7 +317,7 @@
                                                 <option value="1">Very poor</option>
                                             </select>
                                         </div>
-                                        <textarea cols="30" rows="6" placeholder="Write Your Review Here..." class="form-control" id="review"></textarea>
+                                        <textarea cols="30" rows="6" name="message" placeholder="Write Your Review Here..." class="form-control" id="review"></textarea>
                                         <div class="row gutter-md">
                                             <div class="col-md-6">
                                                 <input type="text" class="form-control" placeholder="Your Name" id="author">
@@ -329,7 +331,10 @@
                                             <label for="save-checkbox">Save my name, email, and website in this
                                                 browser for the next time I comment.</label>
                                         </div>
-                                        <button type="submit" class="btn btn-dark">Submit Review</button>
+                                        @if(auth()->check())
+                                            <button type="submit" id="submitForm" class="btn btn-dark">Submit Review</button>
+                                        @endif
+
                                     </form>
                                 </div>
                             </div>
@@ -811,4 +816,62 @@
     </div>
     <!-- End of Page Content -->
 </main>
+@endsection
+@section('custom-script')
+    <script>
+        $("#reviewForm").on('submit', function(e) {
+            e.preventDefault();
+            var form = $('#reviewForm')[0];
+            var formData = new FormData(form);
+            $.ajax({
+                type: "POST",
+                url: "{{route('add_Review')}}",
+                dataType: 'json',
+                data: formData,
+                beforeSend: function() {
+                    $("#submitForm").prop('disabled', true);
+                    $("#submitForm").html('Processing');
+                    $('.error-message').hide();
+                },
+                success: function(res) {
+                    $("#submitForm").attr('class', 'btn btn-success');
+                    $("#submitForm").html('Banner Added</>');
+                    if (res.success === true) {
+                        notyf.success({
+                            message: res.message,
+                            duration: 3000
+                        });
+                    } else {
+                        notyf.error({
+                            message: res.message,
+                            duration: 3000
+                        })
+                    }
+                },
+                error: function(e) {
+                    $("#submitForm").prop('disabled', false);
+                    $("#submitForm").html('Submit');
+
+                    if (e.responseJSON.errors['title']) {
+                        $('.error-title').html('<small class=" error-message text-danger">' + e
+                            .responseJSON.errors['title'][0] + '</small>');
+                    }
+                    if (e.responseJSON.errors['description']) {
+                        $('.error-description').html('<small class=" error-message text-danger">' + e
+                            .responseJSON.errors['description'][0] + '</small>');
+                    }
+
+                    if (e.responseJSON.errors['status']) {
+                        $('.error-status').html('<small class=" error-message text-danger">' + e
+                            .responseJSON.errors['status'][0] + '</small>');
+                    }
+                    if (e.responseJSON.errors['image']) {
+                        $('.error-image').html('<small class=" error-message text-danger">' + e
+                            .responseJSON.errors['image'][0] + '</small>');
+                    }
+
+                }
+            });
+        });
+    </script>
 @endsection

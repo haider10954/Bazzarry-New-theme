@@ -10,9 +10,10 @@ class ProductReviewController extends Controller
 {
     public function addReview(AddReviewRequest $request)
     {
+        dd($request->all());
         $add_review = Review::create([
             'product_id' => $request->product_id,
-            'user_id' => $request->user_id,
+            'user_id' => auth()->id(),
             'name' => auth()->user()->name,
             'email' => auth()->user()->email,
             'rating' => $request->rating,

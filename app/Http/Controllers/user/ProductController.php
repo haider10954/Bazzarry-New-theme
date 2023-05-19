@@ -102,4 +102,9 @@ class ProductController extends Controller
             ]);
         }
     }
+    public function getAllProducts()
+    {
+        $products = \App\Models\Product::query()->with('getCategory')->orderBy('id','desc')->get();
+        return view('user.pages.products',compact('products'));
+    }
 }
