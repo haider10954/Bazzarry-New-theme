@@ -296,7 +296,7 @@
                                     </h3>
                                     <p class="mb-3">Your email address will not be published. Required fields
                                         are marked *</p>
-                                    <form id="reviewForm" class="review-form">
+                                    <form id="reviewForm">
                                         @csrf
                                         <input type="hidden" value="{{$product->id}}" name="product_id">
                                         <div class="rating-form">
@@ -332,7 +332,7 @@
                                                 browser for the next time I comment.</label>
                                         </div>
                                         @if(auth()->check())
-                                            <button type="submit" id="submitForm" class="btn btn-dark">Submit Review</button>
+                                        <button type="submit" id="submitForm" class="btn btn-dark">Submit Review</button>
                                         @endif
 
                                     </form>
@@ -817,61 +817,60 @@
     <!-- End of Page Content -->
 </main>
 @endsection
-@section('custom-script')
-    <script>
-        $("#reviewForm").on('submit', function(e) {
-            e.preventDefault();
-            var form = $('#reviewForm')[0];
-            var formData = new FormData(form);
-            $.ajax({
-                type: "POST",
-                url: "{{route('add_Review')}}",
-                dataType: 'json',
-                data: formData,
-                beforeSend: function() {
-                    $("#submitForm").prop('disabled', true);
-                    $("#submitForm").html('Processing');
-                    $('.error-message').hide();
-                },
-                success: function(res) {
-                    $("#submitForm").attr('class', 'btn btn-success');
-                    $("#submitForm").html('Banner Added</>');
-                    if (res.success === true) {
-                        notyf.success({
-                            message: res.message,
-                            duration: 3000
-                        });
-                    } else {
-                        notyf.error({
-                            message: res.message,
-                            duration: 3000
-                        })
-                    }
-                },
-                error: function(e) {
-                    $("#submitForm").prop('disabled', false);
-                    $("#submitForm").html('Submit');
-
-                    if (e.responseJSON.errors['title']) {
-                        $('.error-title').html('<small class=" error-message text-danger">' + e
-                            .responseJSON.errors['title'][0] + '</small>');
-                    }
-                    if (e.responseJSON.errors['description']) {
-                        $('.error-description').html('<small class=" error-message text-danger">' + e
-                            .responseJSON.errors['description'][0] + '</small>');
-                    }
-
-                    if (e.responseJSON.errors['status']) {
-                        $('.error-status').html('<small class=" error-message text-danger">' + e
-                            .responseJSON.errors['status'][0] + '</small>');
-                    }
-                    if (e.responseJSON.errors['image']) {
-                        $('.error-image').html('<small class=" error-message text-danger">' + e
-                            .responseJSON.errors['image'][0] + '</small>');
-                    }
-
+@section('custom-scripts')
+<script>
+    $("#reviewForm").on('submit', function(e) {
+        e.preventDefault();
+        var formData = new FormData($('#reviewForm')[0]);
+        $.ajax({
+            type: "POST",
+            url: "{{route('add_Review')}}",
+            dataType: 'json',
+            data: formData,
+            beforeSend: function() {
+                $("#submitForm").prop('disabled', true);
+                $("#submitForm").html('Processing');
+                $('.error-message').hide();
+            },
+            success: function(res) {
+                $("#submitForm").attr('class', 'btn btn-success');
+                $("#submitForm").html('Banner Added</>');
+                if (res.success === true) {
+                    notyf.success({
+                        message: res.message,
+                        duration: 3000
+                    });
+                } else {
+                    notyf.error({
+                        message: res.message,
+                        duration: 3000
+                    })
                 }
-            });
+            },
+            error: function(e) {
+                $("#submitForm").prop('disabled', false);
+                $("#submitForm").html('Submit');
+
+                if (e.responseJSON.errors['title']) {
+                    $('.error-title').html('<small class=" error-message text-danger">' + e
+                        .responseJSON.errors['title'][0] + '</small>');
+                }
+                if (e.responseJSON.errors['description']) {
+                    $('.error-description').html('<small class=" error-message text-danger">' + e
+                        .responseJSON.errors['description'][0] + '</small>');
+                }
+
+                if (e.responseJSON.errors['status']) {
+                    $('.error-status').html('<small class=" error-message text-danger">' + e
+                        .responseJSON.errors['status'][0] + '</small>');
+                }
+                if (e.responseJSON.errors['image']) {
+                    $('.error-image').html('<small class=" error-message text-danger">' + e
+                        .responseJSON.errors['image'][0] + '</small>');
+                }
+
+            }
         });
-    </script>
+    });
+</script>
 @endsection
