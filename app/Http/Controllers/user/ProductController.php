@@ -25,18 +25,23 @@ class ProductController extends Controller
             ->get();
 
         // Get Review
-        $Product_review = Review::where('product_id', $product->id)->get();
+        $Product_review = Review::with('getProduct','getUser')->where('product_id', $product->id)->orderBy('id','desc')->limit(5)->get();
 
         $firstReview = Review::where('product_id', $product->id)->first();
         $reviews = Review::where('product_id', $product->id)->get();
         $averageRating = 0;
+        $countrating= 0;
         if ($reviews->count() > 0) {
 
-            $totalRatting = DB::table('reviews')->sum('rating');
+            $totalRatting = DB::table('reviews')->where('product_id',$product->id)->sum('rating');
             $averageRating = $totalRatting / ($reviews->count() * 5) * 100;
+
+            $countrating = $totalRatting / $reviews->count()  ;
+
+
         }
 
-        return view('user.pages.product-details', compact('product','related_products' ,'Product_review', 'reviews', 'firstReview', 'averageRating'));
+        return view('user.pages.product-details', compact('product','related_products' ,'Product_review', 'reviews', 'firstReview', 'averageRating','countrating'));
     }
 
     public function add_to_cart(Request $request)
@@ -106,5 +111,18 @@ class ProductController extends Controller
     {
         $products = \App\Models\Product::query()->with('getCategory')->orderBy('id','desc')->get();
         return view('user.pages.products',compact('products'));
+    }
+    public function clearCart()
+    {
+        $cart = session()->get('cart');
+        if($cart)
+        {
+            session()->forget('cart');
+            return response()->json([
+                'success' => true,
+                'message' => 'Cart items removed successfully'
+            ]);
+        }
+
     }
 }

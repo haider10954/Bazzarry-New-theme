@@ -59,6 +59,8 @@ Route::get('/cart', function () {
     return view('user.pages.cart');
 })->name('cart');
 
+Route::post('/clear-cart',[ProductController::class,'clearCart'])->name('clear_cart');
+
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 
 Route::get('/wishlist', function () {

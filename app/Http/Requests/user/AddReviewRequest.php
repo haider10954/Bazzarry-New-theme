@@ -25,8 +25,6 @@ class AddReviewRequest extends FormRequest
     {
         return [
             'rating' => 'required|min:0',
-            'name' => 'required',
-            'email' => 'required|email',
             'message' => 'required'
         ];
     }

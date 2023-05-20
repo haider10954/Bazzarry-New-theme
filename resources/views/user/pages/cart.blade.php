@@ -78,7 +78,7 @@
 
                     <div class="cart-action mb-6">
                         <a href="#" class="btn btn-dark btn-rounded btn-icon-left btn-shopping mr-auto"><i class="w-icon-long-arrow-left"></i>Continue Shopping</a>
-                        <button type="submit" class="btn btn-rounded btn-default btn-clear" name="clear_cart" value="Clear Cart">Clear Cart</button>
+                        <button type="button" class="btn btn-rounded btn-default btn-clear" onclick="clearCart()" name="clear_cart" value="Clear Cart">Clear Cart</button>
                     </div>
 
                     <form class="coupon">
@@ -120,6 +120,30 @@
 
 @section('custom-scripts')
 <script>
+    function clearCart()
+    {
+        $.ajax({
+            type: "POST",
+            url: "{{route('clear_cart')}}",
+            dataType: 'json',
+            data: {
+                _token: '{{csrf_token()}}'
+            },
+            beforeSend: function() {},
+            success: function(res) {
+                if (res.success === true) {
+                    notyf.success({
+                        message: res.message,
+                        duration: 2000
+                    });
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 3000);
+                } else {}
+            },
+            error: function(e) {}
+        });
+    }
     $('.w-icon-plus').on('click', function(e) {
         var id = $(this).attr('data-id');
         e.preventDefault();
