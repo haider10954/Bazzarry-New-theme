@@ -128,6 +128,32 @@ $useAssets = [];
     <!-- End of Sticky Footer -->
 
     <!-- Start of Scroll Top -->
+    <div class="chat-button">
+    <button class="btn" id="chatButton">
+        <img src="{{asset('user_assets/images/chat.png')}}" alt="">
+    </button>
+    </div>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h3>Chat</h3>
+            <button id="closeChatButton">&times;</button>
+        </div>
+        <div class="chat-content">
+            <div class="message outgoing">
+                <p>Hey! How are you?</p>
+                <span class="time">10:00 AM</span>
+            </div>
+            <div class="message incoming">
+                <p>Hi! I'm good. How about you?</p>
+                <span class="time">10:02 AM</span>
+            </div>
+            <!-- Add more messages as needed -->
+        </div>
+        <div class="chat-input">
+            <input type="text" placeholder="Type a message..." />
+            <button id="sendButton">Send</button>
+        </div>
+    </div>
     <a id="scroll-top" class="scroll-top" href="#top" title="Top" role="button"> <i class="w-icon-angle-up"></i> <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70">
             <circle id="progress-indicator" fill="transparent" stroke="#000000" stroke-miterlimit="10" cx="35" cy="35" r="34" style="stroke-dasharray: 16.4198, 400;"></circle>
         </svg> </a>
