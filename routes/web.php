@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\AuthController;
 use App\Http\Controllers\admin\OrderController;
 use App\Http\Controllers\admin\BannerController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\seller\ProductOfferController;
 use App\Http\Controllers\admin\SellerController;
 use App\Http\Controllers\seller\AdvertisementController;
@@ -59,7 +60,7 @@ Route::get('/cart', function () {
     return view('user.pages.cart');
 })->name('cart');
 
-Route::post('/clear-cart',[ProductController::class,'clearCart'])->name('clear_cart');
+Route::post('/clear-cart', [ProductController::class, 'clearCart'])->name('clear_cart');
 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 
@@ -67,7 +68,7 @@ Route::get('/wishlist', function () {
     return view('user.pages.wishList');
 })->name('wishlist');
 
-Route::get('/products', [ProductController::class,'getAllProducts'])->name('products');
+Route::get('/products', [ProductController::class, 'getAllProducts'])->name('products');
 
 Route::post('/add-to-cart', [ProductController::class, 'add_to_cart'])->name('add_to_cart');
 Route::post('/add-product-review', [\App\Http\Controllers\user\ProductReviewController::class, 'addReview'])->name('add_Review');
@@ -252,3 +253,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 //Paypal routes
 Route::get('/sucess', [CheckoutController::class, 'executePayPalPayment'])->name('paypal.executePayment');
 Route::get('/error', [CheckoutController::class, 'cancelPayment'])->name('paypal.cancelPayment');
+
+//Chatbot routes
+Route::post('/chat/message', [ChatController::class, 'sendMessage'])->name('chatbot.sendMessage');
