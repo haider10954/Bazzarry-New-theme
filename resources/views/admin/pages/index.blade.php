@@ -1075,11 +1075,11 @@
         series: [{
             name: "Orders",
             type: "area",
-            data: [34, 65, 46, 68, 49, 61, 42, 44, 78, 52, 63, 67]
+            data: @json($list->pluck('ordersCount'))
         }, {
             name: "Earnings",
             type: "bar",
-            data: [89.25, 98.58, 68.74, 108.87, 77.54, 84.03, 51.24, 28.57, 92.57, 42.36, 88.51, 36.57]
+            data: @json($list->pluck('totalAmount'))
         }],
         chart: {
             height: 370,
@@ -1104,7 +1104,7 @@
             }
         },
         xaxis: {
-            categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            categories: @json($list->pluck('month')),
             axisTicks: {
                 show: !1
             },

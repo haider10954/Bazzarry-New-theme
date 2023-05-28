@@ -32,7 +32,7 @@ class IndexController extends Controller
             ->groupBy('month')
             ->orderBy('month')
             ->get();
-        
+
         $list = [
             [
                 'month' => 'Jan',
@@ -96,13 +96,19 @@ class IndexController extends Controller
             ]
         ];
         foreach ($orders as $order) {
-            if(isset($list[$order->month - 1]))
-            {
+            if (isset($list[$order->month - 1])) {
                 $list[$order->month - 1]['ordersCount'] = $order->total_count;
                 $list[$order->month - 1]['totalAmount'] = $order->total_amount;
             }
         }
 
+        $list = collect($list);
+
+        // Recent Orders 
+
+        $recent_orders = Order::query()->latest()->get();
+
+        // dd($recent_orders);
         return view('admin.pages.index', compact(
             'seller',
             'all_products',
@@ -110,7 +116,9 @@ class IndexController extends Controller
             'unpublished_product',
             'all_sellers',
             'all_customers',
-            'all_orders'
+            'all_orders',
+            'list',
+            'recent_orders'
         ));
     }
 }
