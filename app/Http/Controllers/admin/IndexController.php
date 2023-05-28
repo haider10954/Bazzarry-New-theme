@@ -32,11 +32,75 @@ class IndexController extends Controller
             ->groupBy('month')
             ->orderBy('month')
             ->get();
+        
+        $list = [
+            [
+                'month' => 'Jan',
+                'ordersCount' => 0,
+                'totalAmount' => 0
+            ],
+            [
+                'month' => 'Feb',
+                'ordersCount' => 0,
+                'totalAmount' => 0
+            ],
+            [
+                'month' => 'Mar',
+                'ordersCount' => 0,
+                'totalAmount' => 0
+            ],
+            [
+                'month' => 'Apr',
+                'ordersCount' => 0,
+                'totalAmount' => 0
+            ],
+            [
+                'month' => 'May',
+                'ordersCount' => 0,
+                'totalAmount' => 0
+            ],
+            [
+                'month' => 'Jun',
+                'ordersCount' => 0,
+                'totalAmount' => 0
+            ],
+            [
+                'month' => 'Jul',
+                'ordersCount' => 0,
+                'totalAmount' => 0
+            ],
+            [
+                'month' => 'Aug',
+                'ordersCount' => 0,
+                'totalAmount' => 0
+            ],
+            [
+                'month' => 'Sep',
+                'ordersCount' => 0,
+                'totalAmount' => 0
+            ],
+            [
+                'month' => 'Oct',
+                'ordersCount' => 0,
+                'totalAmount' => 0
+            ],
+            [
+                'month' => 'Nov',
+                'ordersCount' => 0,
+                'totalAmount' => 0
+            ],
+            [
+                'month' => 'Dec',
+                'ordersCount' => 0,
+                'totalAmount' => 0
+            ]
+        ];
         foreach ($orders as $order) {
-            $month = \Carbon\Carbon::create()->month($order->month)->format('F');
-            $orderCount = $order->total_count;
-            $total_amount = number_format($order->total_amount);
-            // dd("Month: $month, Order Count: $orderCount , Total Amount in Rs : $total_amount");
+            if(isset($list[$order->month - 1]))
+            {
+                $list[$order->month - 1]['ordersCount'] = $order->total_count;
+                $list[$order->month - 1]['totalAmount'] = $order->total_amount;
+            }
         }
 
         return view('admin.pages.index', compact(
