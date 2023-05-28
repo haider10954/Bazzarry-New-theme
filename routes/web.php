@@ -7,6 +7,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\seller\ProductOfferController;
 use App\Http\Controllers\admin\SellerController;
 use App\Http\Controllers\seller\AdvertisementController;
+use App\Http\Controllers\seller\DashboardController;
 use App\Http\Controllers\user\AuthController as UserAuthController;
 use App\Http\Controllers\user\CheckoutController;
 use App\Http\Controllers\user\IndexController;
@@ -187,9 +188,7 @@ Route::prefix('seller')->group(function () {
         //add category
         Route::post('/add-category', [\App\Http\Controllers\seller\ProductController::class, 'add_category'])->name('add_category-seller');
 
-        Route::get('/dashboard', function () {
-            return view('seller.pages.index');
-        })->name('seller-dashboard');
+        Route::get('/dashboard', [DashboardController::class,'index'])->name('seller-dashboard');
 
         //Offers
         Route::post('fetch-category', [ProductOfferController::class, 'fetchCategory'])->name('CheckCategory');
