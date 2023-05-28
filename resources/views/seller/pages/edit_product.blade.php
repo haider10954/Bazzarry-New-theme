@@ -264,6 +264,9 @@
                             </div>
                         </div>
                     </div>
+                    <div class="text-end mb-3">
+                        <button type="submit" id="submitForm" class="btn btn-success w-sm">Submit</button>
+                    </div>
                 </div>
 
                 <div class="col-lg-4">
@@ -326,9 +329,9 @@
                                     New</a>Select product category <span class="text-danger">*</span>
                             </p>
                             <div class="center">
-                                <select name="product_category" class="form-control" placeholder="Select Category">
+                                <select name="product_category" onchange="getChieldCategory($(this));" class="form-control mb-2" placeholder="Select Category">
                                     <option value="">Select Category</option>
-                                    @foreach($category as $item)
+                                    @foreach($category->whereNull('parent_id') as $item)
                                     <option value="{{$item->id}}" <?php if ($item->id == $product->category_id) {
                                                                         echo "Selected";
                                                                     }  ?>>{{$item->name}}</option>
@@ -387,6 +390,187 @@
 @endsection
 
 @section('custom-script')
+<script>
+    function createSlug(str) {
+        return str
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, '') // Remove special characters
+            .replace(/\s+/g, '-') // Replace spaces with hyphens
+            .replace(/-+/g, '-') // Remove consecutive hyphens
+            .trim('-'); // Trim leading/trailing hyphens
+    }
+
+    const randomString = (length) => {
+        let result = "";
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        const charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    };
+
+    let variant_list = @json($product->variant);
+    let variant_basic = @json($product->v_data);
+    let vName = Object.keys(variant_basic);
+    for(let i = 0;i < vName.length; i++)
+    {
+        $("#variant_table").append(`
+            <tr id="data-variant-${createSlug(vName[i])}" data-v-name="${vName[i]}" data-v-id="${variant_basic[vName[i]]['key']}" data-v-options='${JSON.stringify(variant_basic[vName[i]]['val'])}' data-v-options-id='${JSON.stringify(variant_basic[vName[i]]['id'])}'>
+                <td>${vName[i]} <input type="hidden" name="variant[]" value="${variant_basic[vName[i]]['key']}"></td>
+                <td>${variant_basic[vName[i]]['val'].join("<br>")} <input name="options[]" value='${JSON.stringify(variant_basic[vName[i]]['id'])}' type="hidden"></td>
+                <td><button class="btn btn-danger" onclick="$(this).parent().parent().remove(); generateVariantCombinations();">Remove</button></td>
+            </tr>
+        `);
+        generateVariantCombinations(true);
+    }
+    
+
+    function pluckAll(arr, key) {
+        return arr.map(obj => obj[key]).filter(val => val !== undefined);
+    }
+
+    $("#variant").change(function() {
+        let value = $('option:selected', this).attr('data-value');
+        $(".variant_values").addClass("d-none");
+        $("." + value).removeClass("d-none");
+    });
+
+    function addVariant() {
+        let id = $("#variant option:selected").val();
+        let value = $("#variant option:selected").attr('data-value');
+        let name = $("#variant option:selected").attr('data-name');
+        if ($("." + value + " input:checked").length < 1) {
+            alert("Please select variant value");
+            return false;
+        }
+        let optionList = [];
+        $("." + value + " input:checked").each(function() {
+            optionList.push({
+                id: $(this).val(),
+                name: $(this).attr("data-name")
+            });
+        });
+        if ($("#data-variant-" + value).length > 0) {
+            $("#data-variant-" + value).attr("data-v-options", JSON.stringify(pluckAll(optionList, "name")));
+            $("#data-variant-" + value).attr("data-v-options-id", JSON.stringify(pluckAll(optionList, "id")));
+            $("#data-variant-" + value + " td:eq(0)").html(`${name} <input type="hidden" name="variant[]" value="${id}">`);
+            $("#data-variant-" + value + " td:eq(1)").html(`${pluckAll(optionList,"name").join("<br>")} <input name="options[]" value='${JSON.stringify(pluckAll(optionList,"id"))}' type="hidden">`);
+        } else {
+            $("#variant_table").append(`
+                <tr id="data-variant-${value}" data-v-name="${name}" data-v-id="${id}" data-v-options='${JSON.stringify(pluckAll(optionList,"name"))}' data-v-options-id='${JSON.stringify(pluckAll(optionList,"id"))}'>
+                    <td>${name} <input type="hidden" name="variant[]" value="${id}"></td>
+                    <td>${pluckAll(optionList,"name").join("<br>")} <input name="options[]" value='${JSON.stringify(pluckAll(optionList,"id"))}' type="hidden"></td>
+                    <td><button class="btn btn-danger" onclick="$(this).parent().parent().remove(); generateVariantCombinations();">Remove</button></td>
+                </tr>
+            `);
+        }
+        $("#variant").val("");
+        $("#variant").change();
+        $(".variant_values input").prop("checked", false);
+        generateVariantCombinations();
+    }
+
+    function generateVariantCombinations(edit = false) {
+        if ($("#variant_table tr").length < 1) {
+            alert("Nothing to generate combination.");
+            return false;
+        }
+        let variants = [];
+        let variantsID = [];
+        let names = [];
+        let price = [];
+        let qty = [];
+        let sku = [];
+        $("#variant_table tr").each(function() {
+            let k = $(this).attr("data-v-name");
+            if(edit)
+            {
+                let p = $(this).attr("data-v-price");
+                let q = $(this).attr("data-v-qty");
+                let s = $(this).attr("data-v-sku");
+                price.push(p);
+                qty.push(q);
+                sku.push(s);
+            }
+            let kk = "" + $(this).attr("data-v-id");
+            names.push(k);
+            variants[k] = JSON.parse($(this).attr("data-v-options"));
+            variantsID[kk] = JSON.parse($(this).attr("data-v-options-id"));
+        });
+        const combinationID = getVariantCombinations(variantsID);
+        
+        const variantCombinations = getVariantCombinations(variants);
+        let thead = `<tr>`;
+        $.each(names, function(index, value) {
+            thead += `<th>${value}</th>`;
+        });
+        thead += `<th>Price</th>`;
+        thead += `<th>Quantity</th>`;
+        thead += `<th>SKU</th>`;
+        thead += `</tr>`;
+        $("#combination_table thead").html(thead);
+        let tbody = ``;
+        for (let i = 0; i < variantCombinations.length; i++) {
+            tbody += `<tr>`;
+            $.each(variantCombinations[i], function(index, value) {
+                tbody += `<td>${value}</td>`;
+            });
+
+            let p = 0;
+            let q = 0;
+            let s = randomString(10);
+            $.each(variant_list,function(ind,val){
+                if(JSON.stringify(val.variant_array) == JSON.stringify(combinationID[i]))
+                {
+                    p = val.price;
+                    q = val.quantity;
+                    s = val.sku;
+                }
+            });
+
+            let comb_key_json = JSON.stringify(combinationID[i]);
+            let comb_val_json = JSON.stringify(variantCombinations[i]);
+            tbody += `<th><input class="form-control" style="150px" type="number" step="0.1" min="0" value="${p}" name='v_price[]'></th>`;
+            tbody += `<th><input class="form-control" style="150px" type="number" min="0" name='v_quantity[]' value="${ q }"></th>`;
+            tbody += `<th><input class="form-control" style="200px" type="text" name='v_sku[]' value="${s}"></th>`;
+            tbody += `<input type="hidden" name="combination_key_json[]" value='${comb_key_json}'></tr>`;
+            tbody += `<input type="hidden" name="combination_val_json[]" value='${comb_val_json}'></tr>`;
+        }
+        $("#combination_table tbody").html(tbody);
+    }
+
+    function getVariantCombinations(variants) {
+        const variantKeys = Object.keys(variants);
+        const variantValues = variantKeys.map(key => variants[key]);
+
+        const combinations = [];
+
+        function getCombinationsHelper(currentCombo, index) {
+            if (index === variantValues.length) {
+                combinations.push(currentCombo);
+                return;
+            }
+
+            variantValues[index].forEach(value => {
+                const newCombo = [...currentCombo, value];
+                getCombinationsHelper(newCombo, index + 1);
+            });
+        }
+
+        getCombinationsHelper([], 0);
+
+        const variantCombinations = combinations.map(combo => {
+            return combo.reduce((acc, value, index) => {
+                const key = variantKeys[index];
+                acc[key] = value;
+                return acc;
+            }, {});
+        });
+
+        return variantCombinations;
+    }
+</script>
 <script>
     ClassicEditor
         .create(document.querySelector('#editor'))

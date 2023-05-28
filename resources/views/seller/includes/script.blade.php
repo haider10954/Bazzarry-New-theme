@@ -76,3 +76,79 @@
 <!-- App js -->
 <script src="{{asset('seller_assets/js/app.js')}}"></script>
 <script src="{{asset('seller_assets/js/custom.js')}}"></script>
+
+<script>
+    @if(request()->segment(2) == 'edit_product' || request()->segment(2) == 'add-product')
+    let selectedVal = "";
+    const categories = @json($category ?? []);
+    let chain = [];
+    @if($product->category_id ?? 0 > 0)
+    chain.push({{ $product->category_id }});
+    @endif
+    let findChain = true;
+    let idToFind = '{{ $product->category_id ?? 0 }}';
+    while(findChain)
+    {
+        idToFind == 0 ? findChain = false : getChain();
+    }
+    function getChain()
+    {
+        $.each(categories,function(index,item){
+            if(item.id == idToFind)
+            {
+                if(item.parent_id == null)
+                {
+                    findChain = false;
+                }else{
+                    findChain = true;
+                    idToFind = item.parent_id;
+                    chain.push(item.parent_id);
+                }
+            }
+        });
+    }
+
+    for (let i = chain.length - 1; i >= 0; i--) {
+        $(document).find("select[name=product_category]:last").val(chain[i]);
+        $(document).find("select[name=product_category]:last").change();
+    }
+
+    for (const chainItem of chain) {
+        console.log("The current element is: " + chainItem);
+    }
+    function getChieldCategory(selector,id = null)
+    {
+        let index = selector.parent().index();
+        $(".center").each(function(){
+            if($(this).index() > index)
+            {
+                $(this).remove();
+            }
+        });
+        if(selector.val() == "")
+        {
+            return false;
+        }
+        selectedVal = selector.val();
+        let options = ``;
+        $.each(categories,function(index,item){
+            if(item.parent_id == selector.val())
+            {
+                options += `<option value="${item.id}">${item.name}</option>`;
+            }
+        });
+        if(options != "")
+        {
+            let html = `<div class="center">
+            <select name="product_category" onchange="getChieldCategory($(this));" class="form-control mb-2" placeholder="Select Category">
+                            <option value="">Select Category</option>
+                            ${options}
+                        </select>
+                    </div>`;
+            selector.parent().after(html);
+        }
+        $(document).find(".center").find("select").attr("name","");
+        $(document).find(".center:last").find("select").attr("name","product_category");
+    }
+    @endif
+</script>

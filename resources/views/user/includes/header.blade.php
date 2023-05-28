@@ -37,22 +37,16 @@
                     <a href="{{route('index')}}" class="logo ml-lg-0">
                         <img src="{{asset('user_assets/images/demos/demo2/logo.png')}}" alt="logo" width="144" height="45" />
                     </a>
-                    <form method="get" action="#" class="header-search hs-expanded hs-round d-none d-md-flex input-wrapper mr-4 ml-4">
+                    <form method="get" action="{{ url('products') }}" class="header-search hs-expanded hs-round d-none d-md-flex input-wrapper mr-4 ml-4">
                         <div class="select-box">
                             <select id="category" name="category">
                                 <option value="">All Categories</option>
-                                <option value="4">Fashion</option>
-                                <option value="5">Furniture</option>
-                                <option value="6">Shoes</option>
-                                <option value="7">Sports</option>
-                                <option value="8">Games</option>
-                                <option value="9">Computers</option>
-                                <option value="10">Electronics</option>
-                                <option value="11">Kitchen</option>
-                                <option value="12">Clothing</option>
+                                @foreach ($category as $cate)
+                                <option {{ request('category') == $cate->name ? 'selected' : '' }} value="{{ $cate->name }}">{{ $cate->name }}</option>
+                                @endforeach
                             </select>
                         </div>
-                        <input type="text" class="form-control" name="search" id="search" placeholder="Search in..." required />
+                        <input type="text" class="form-control" name="search" id="search" value="{{ request('search') }}" placeholder="Search in..." />
                         <button class="btn btn-search" type="submit"><i class="w-icon-search"></i>
                         </button>
                     </form>

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->enum('status',['published','draft'])->default('draft');
             $table->string('addedBy');
+            $table->foreignId('parent_id')->constrained('categories')->nullable()->default(null);
             $table->timestamps();
         });
     }

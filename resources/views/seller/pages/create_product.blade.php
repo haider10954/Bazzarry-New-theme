@@ -307,9 +307,9 @@
                                     <a href="javascript: void(0);" data-bs-toggle="modal" data-bs-target="#add-category" class="float-end text-decoration-underline">Add
                                         New</a>Select product category <span class="text-danger">*</span></p>
                                 <div class="center">
-                                    <select name="product_category" id="sources" class="custom-select sources" placeholder="Select Category">
-                                        <option value="" selected disabled>Select Category</option>
-                                        @foreach($category as $item)
+                                    <select name="product_category" onchange="getChieldCategory($(this));" id="sources" class="mb-2 form-control" placeholder="Select Category">
+                                        <option value="" selected>Select Category</option>
+                                        @foreach($category->whereNull('parent_id') as $item)
                                             <option value="{{$item->id}}">{{$item->name}}</option>
                                         @endforeach
                                     </select>
