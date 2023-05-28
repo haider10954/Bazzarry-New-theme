@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\user;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\Review;
 use Illuminate\Http\Request;
@@ -109,7 +110,17 @@ class ProductController extends Controller
     }
     public function getAllProducts()
     {
-        $products = \App\Models\Product::query()->with('getCategory')->orderBy('id','desc')->get();
+        $products = \App\Models\Product::query()
+            ->when(request('category') && !empty(request('category')),function($query){
+                $id = Category::select('id')->where('name',request('category'))->first();
+                $query->where('category_id',$id->id);
+            })
+            ->with('getCategory')
+            ->when(request('search') && !empty(request('search')),function($query){
+                $query->where('title','LIKE','%'.request('search').'%');            
+            })
+            ->orderBy('id','desc')
+            ->get();
         return view('user.pages.products',compact('products'));
     }
     public function clearCart()

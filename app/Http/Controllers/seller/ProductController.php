@@ -99,16 +99,16 @@ class ProductController extends Controller
         ]);
 
         if ($product) {
-//            for ($i  = 0; $i < count($request->v_price); $i++) {
-//                ProductVariant::create([
-//                    'product_id' => $product->id,
-//                    'price' => $request->v_price[$i],
-//                    'quantity' => $request->v_quantity[$i],
-//                    'sku' => $request->v_sku[$i],
-//                    'variant_string' => json_decode($request->combination_val_json[$i], true),
-//                    'variant_array' => json_decode($request->combination_key_json[$i], true)
-//                ]);
-//            }
+           for ($i  = 0; $i < count($request->v_price); $i++) {
+               ProductVariant::create([
+                   'product_id' => $product->id,
+                   'price' => $request->v_price[$i],
+                   'quantity' => $request->v_quantity[$i],
+                   'sku' => $request->v_sku[$i],
+                   'variant_string' => json_decode($request->combination_val_json[$i], true),
+                   'variant_array' => json_decode($request->combination_key_json[$i], true)
+               ]);
+           }
             return json_encode([
                 'success' => true,
                 'message' => 'Product has been added successfully',
@@ -124,7 +124,19 @@ class ProductController extends Controller
     public function edit_product_view($slug)
     {
         $product = Product::where('slug', $slug)->first();
+
         $variant = Variant::with('values')->get();
+        
+        $data = [];
+        foreach($variant as $key => $value)
+        {
+            $data[$value->name]['key'] = $value->id;
+            $data[$value->name]['val'] = array_unique($product->variant->pluck('variant_string')->pluck($value->name)->toArray());
+            $data[$value->name]['id'] = array_unique($product->variant->pluck('variant_array')->pluck($value->id)->toArray());
+            $data[$value->name]['val'] = array_values($data[$value->name]['val']);
+            $data[$value->name]['id'] = array_values($data[$value->name]['id']);
+        }
+        $product->v_data = $data;
         $category = Category::get();
         return view('seller.pages.edit_product', compact('product', 'variant', 'category'));
     }
@@ -173,6 +185,19 @@ class ProductController extends Controller
             'slug' => $modified_string . '-' . $request['id'],
             'added_id' => auth('seller')->id()
         ]);
+        
+        ProductVariant::where('product_id',$product->id)->delete();
+        for ($i  = 0; $i < count($request->v_price); $i++) {
+            ProductVariant::create([
+                'product_id' => $product->id,
+                'price' => $request->v_price[$i],
+                'quantity' => $request->v_quantity[$i],
+                'sku' => $request->v_sku[$i],
+                'variant_string' => json_decode($request->combination_val_json[$i], true),
+                'variant_array' => json_decode($request->combination_key_json[$i], true)
+            ]);
+        }
+
         if ($Updatedproduct) {
             return response()->json([
                 'success' => true,

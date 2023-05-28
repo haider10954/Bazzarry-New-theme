@@ -64,14 +64,14 @@
                                                 <a class="nav-link fw-semibold" data-bs-toggle="tab"
                                                    href="#productnav-published" role="tab">
                                                     Published <span
-                                                        class="badge badge-soft-danger align-middle rounded-pill ms-1">{{$published_category->count()}}</span>
+                                                        class="badge badge-soft-danger align-middle rounded-pill ms-1">{{$category->where('status','published')->count()}}</span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link fw-semibold" data-bs-toggle="tab"
                                                    href="#productnav-draft" role="tab">
                                                     Draft <span
-                                                        class="badge badge-soft-danger align-middle rounded-pill ms-1">{{$draft_category->count()}}</span>
+                                                        class="badge badge-soft-danger align-middle rounded-pill ms-1">{{$category->where('status','draft')->count()}}</span>
                                                 </a>
                                             </li>
                                         </ul>
@@ -109,55 +109,55 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                @if($category->count()>0)
-                                                    @foreach($category as $item)
+                                                    @forelse($category as $item)
                                                         <tr>
-                                                            <td>{{$loop->index+1}}</td>
+                                                            <td>{{$loop->index+1}} {{ chieldCategory($category,$item->id)->count() }}</td>
                                                             <td>
                                                                 {{\Carbon\Carbon::parse($item->created_at)->format('d-m-Y')}}
                                                             </td>
-                                                            <td>{{$item->name}}</td>
+                                                            <td>
+                                                                {{$item->name}}
+                                                            </td>
                                                             @if($item->status=='published')
-                                                                <td><span
-                                                                        class="badge badge-soft-success">{{$item->status}}</span>
-                                                                </td>
+                                                            <td>
+                                                                <span class="badge badge-soft-success">{{$item->status}}</span>
+                                                            </td>
                                                             @else
-                                                                <td><span
-                                                                        class="badge badge-soft-warning">{{$item->status}}</span>
-                                                                </td>
+                                                            <td>
+                                                                <span class="badge badge-soft-warning">{{$item->status}}</span>
+                                                            </td>
                                                             @endif
                                                             <td>
-                                                        <span>
-                                                            <div class="dropdown">
-                                                                <button class="btn btn-soft-secondary btn-sm dropdown"
-                                                                        type="button" data-bs-toggle="dropdown"
-                                                                        aria-expanded="false"><i
-                                                                        class="ri-more-fill"></i></button>
-                                                                <ul class="dropdown-menu dropdown-menu-end">
-                                                                    <li><a class="dropdown-item edit-list"
-                                                                           href="javascript:void(0);"
-                                                                           onclick="edit_record('{{$item->id}} ','{{ $item->name }}')"
-                                                                        ><i
-                                                                                class="ri-pencil-fill align-bottom me-2 text-muted"></i> Edit</a></li>
-                                                                    <li class="dropdown-divider"></li><li><a
-                                                                            class="dropdown-item remove-list deleteRecord"
-                                                                            href="javascript:void(0);"
-                                                                            data-id="{{ $item->id }}"><i
-                                                                                class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete</a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </span>
+                                                                <span>
+                                                                    <div class="dropdown">
+                                                                        <button class="btn btn-soft-secondary btn-sm dropdown"
+                                                                                type="button" data-bs-toggle="dropdown"
+                                                                                aria-expanded="false"><i
+                                                                                class="ri-more-fill"></i></button>
+                                                                        <ul class="dropdown-menu dropdown-menu-end">
+                                                                            <li><a class="dropdown-item edit-list"
+                                                                                href="javascript:void(0);"
+                                                                                onclick="edit_record('{{$item->id}} ','{{ $item->name }}')"
+                                                                                ><i
+                                                                                        class="ri-pencil-fill align-bottom me-2 text-muted"></i> Edit</a></li>
+                                                                            <li class="dropdown-divider"></li><li><a
+                                                                                    class="dropdown-item remove-list deleteRecord"
+                                                                                    href="javascript:void(0);"
+                                                                                    data-id="{{ $item->id }}"><i
+                                                                                        class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete</a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </span>
                                                             </td>
                                                         </tr>
-                                                    @endforeach
-                                                @else
+                                                    @empty
                                                     <tr>
                                                         <td colspan="4">
                                                             No Record Found..
                                                         </td>
                                                     </tr>
-                                                @endif
+                                                    @endforelse
                                                 </tbody>
                                             </table>
                                             <div class="d-flex justify-content-between align-items-center pt-3">
@@ -201,8 +201,7 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                @if($published_category->count()>0)
-                                                    @foreach($published_category as $item)
+                                                    @forelse($category->where('status','published') as $item)
                                                         <tr>
                                                             <td>{{$loop->index+1}}</td>
                                                             <td>
@@ -222,15 +221,13 @@
                                                                 </div>
                                                             </td>
                                                         </tr>
-                                                    @endforeach
-
-                                                @else
+                                                    @empty
                                                     <tr>
                                                         <td colspan="4">
                                                             No Record Found..
                                                         </td>
                                                     </tr>
-                                                @endif
+                                                    @endforelse
                                                 </tbody>
                                             </table>
                                             <div class="d-flex justify-content-between align-items-center pt-3">
@@ -271,8 +268,7 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                @if($draft_category->count()>0)
-                                                    @foreach($draft_category as $item)
+                                                    @forelse($category->where('status','draft') as $item)
                                                         <tr>
                                                             <td>{{$loop->index+1}}</td>
                                                             <td>
@@ -293,8 +289,7 @@
                                                                 </div>
                                                             </td>
                                                         </tr>
-                                                    @endforeach
-                                                @else
+                                                    @empty
                                                     <tr>
                                                         <td colspan="5">
                                                             <div class="no-record-section mx-auto text-center">
@@ -305,7 +300,7 @@
 
                                                         </td>
                                                     </tr>
-                                                @endif
+                                                    @endforelse
                                                 </tbody>
                                             </table>
                                             <div class="d-flex justify-content-between align-items-center pt-3">
@@ -359,14 +354,22 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{route('add_category')}}" method="post">
+                    <form action="{{route('add_category')}}" id="add_category" method="post">
                         @csrf
                         <div class="row g-3">
                             <div class="col-12">
+                                <div class="cate_sel">
+                                    <label class="form-label">Select Category</label>
+                                    <select name="category" onchange="getChieldCategory($(this));" class="form-control mb-4">
+                                        <option value="">Select Category</option>
+                                        @foreach ($category->whereNull('parent_id') as $cate)
+                                            <option value="{{ $cate->id }}">{{ $cate->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div>
                                     <label for="firstName" class="form-label">Add Category</label>
-                                    <input type="text" class="form-control" name="name"
-                                           placeholder="Enter category name">
+                                    <input type="text" class="form-control" name="name" placeholder="Enter category name">
                                     @error('name')
                                     <small class="text-danger">{{$message}}</small>
                                     @enderror
@@ -423,6 +426,11 @@
 @section('custom-script')
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script>
+
+        $("#add_category").submit(function(){
+            $("#add_category").append(`<input name="selected_cate" value="${selectedVal}" type="hidden">`);
+        });
+
         var editModal = new bootstrap.Modal(document.getElementById("editCategory"), {});
 
         function edit_record(id, value) {

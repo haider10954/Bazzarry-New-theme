@@ -60,3 +60,35 @@
 <!-- App js -->
 <script src="{{asset('admin_assets/js/app.js')}}"></script>
 <script src="{{asset('admin_assets/js/custom.js')}}"></script>
+<script>
+    let selectedVal = "";
+    const categories = @json($category ?? []);
+    function getChieldCategory(selector)
+    {
+        selector.parent(".cate_sel").next(".cate_sel").remove();  
+        let index = selector.parent().index();
+        if(selector.val() == "")
+        {
+            return false;
+        }
+        selectedVal = selector.val();
+        let options = ``;
+        $.each(categories,function(index,item){
+            if(item.parent_id == selector.val())
+            {
+                options += `<option value="${item.id}">${item.name}</option>`;
+            }
+        });
+        if(options != "")
+        {
+            let html = `<div class="cate_sel">
+                        <select name="category" onchange="getChieldCategory($(this));" class="form-control mb-4">
+                            <option value="">Select Category</option>
+                            ${options}
+                        </select>
+                    </div>`;
+            selector.parent().after(html);
+        }
+        $(document).find(".cate_sel:last").find("select").attr("name","category");
+    }
+</script>

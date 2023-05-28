@@ -12,17 +12,17 @@ class CategoryController extends Controller
     public function index()
     {
         $category = Category::all();
-        $published_category = Category::where('status', 'published')->get();
-        $draft_category = Category::where('status', 'draft')->get();
-        return view('admin.pages.category', compact('category', 'published_category', 'draft_category'));
+        return view('admin.pages.category', compact('category'));
     }
 
     public function add_category(Request $request)
     {
         $request->validate([
             'name' => 'required|unique:categories',
+            'selected_cate' => 'nullable'
         ]);
         $category = Category::create([
+            'parent_id' => $request->selected_cate ?? null,
             'name' => $request['name'],
             'status' => 'draft',
             'addedBy' => 'admin'
