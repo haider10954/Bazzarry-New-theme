@@ -108,7 +108,11 @@ class IndexController extends Controller
 
         $recent_orders = Order::query()->latest()->get();
 
-        // dd($recent_orders);
+
+        // Best Products
+        $best_product = Product::query()->where('sale_count' , '>' , 0)->orderBy('sale_count', 'DESC')->get();
+        // dd($best_product);
+
         return view('admin.pages.index', compact(
             'seller',
             'all_products',
@@ -118,7 +122,8 @@ class IndexController extends Controller
             'all_customers',
             'all_orders',
             'list',
-            'recent_orders'
+            'recent_orders',
+            'best_product'
         ));
     }
 }

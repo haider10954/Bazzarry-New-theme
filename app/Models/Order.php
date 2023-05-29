@@ -15,15 +15,28 @@ class Order extends Model
 
     public function getBillingAddress()
     {
-        return $this->hasOne(Billing_detail::class , 'id' , 'billing_address');
+        return $this->hasOne(Billing_detail::class, 'id', 'billing_address');
     }
 
     public function getShippingAddress()
     {
-        return $this->hasOne(Shipping_detail::class , 'id' , 'shipping_address');
+        return $this->hasOne(Shipping_detail::class, 'id', 'shipping_address');
     }
     public function getUser()
     {
-        return $this->hasOne(User::class , 'id' , 'user_id');
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            $order_cart_items = unserialize($model->cart_items);
+            foreach ($order_cart_items as $key => $item) {
+                $product = Product::find($key);
+                $product->increment('sale_count', 1);
+            }
+        });
     }
 }

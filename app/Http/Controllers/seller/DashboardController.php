@@ -106,10 +106,10 @@ class DashboardController extends Controller
 
         // Recent Orders 
         $recent_orders = Order::query()->latest()->get();
-        // dd(unserialize($recent_orders[0]['cart_items']));
 
         // Best Products
-
+        $best_product = Product::query()->where('added_id', auth('seller')->id())->where('sale_count', '>', 0)->orderBy('sale_count', 'DESC')->get();
+        // dd($best_product);
 
 
 
@@ -123,7 +123,8 @@ class DashboardController extends Controller
             'all_customers',
             'all_orders',
             'list',
-            'recent_orders'
+            'recent_orders',
+            'best_products',
         ));
     }
 }
