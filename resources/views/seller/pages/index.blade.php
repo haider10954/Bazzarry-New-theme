@@ -254,151 +254,47 @@
                                     <div class="table-responsive table-card">
                                         <table class="table table-hover table-centered align-middle table-nowrap mb-0">
                                             <tbody>
+                                            @if ($best_products->count() > 0)
+                                                @foreach ($best_products as $item)
+                                                
                                                 <tr>
                                                     <td>
                                                         <div class="d-flex align-items-center">
                                                             <div class="avatar-sm bg-light rounded p-1 me-2">
-                                                                <img src="{{asset('admin_assets/images/products/img-1.png')}}" alt="" class="img-fluid d-block" />
+                                                                <img src="{{asset($item->images[0])}}" alt="" class="img-fluid d-block" />
                                                             </div>
                                                             <div>
-                                                                <h5 class="fs-14 my-1"><a href="apps-ecommerce-product-details.html" class="text-reset">Branded T-Shirts</a></h5>
-                                                                <span class="text-muted">24 Apr 2021</span>
+                                                                <h5 class="fs-14 my-1"><a href="" class="text-reset">{{ $item->title }}</a></h5>
+                                                                <span class="text-muted">{{\Carbon\Carbon::parse($item->created_at)->format('d M, Y')}}</span>
                                                             </div>
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">$29.00</h5>
+                                                        <h5 class="fs-14 my-1 fw-normal">Rs. {{ number_format($item->price) }}</h5>
                                                         <span class="text-muted">Price</span>
                                                     </td>
                                                     <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">62</h5>
+                                                        <h5 class="fs-14 my-1 fw-normal">{{ $item->sale_count }}</h5>
                                                         <span class="text-muted">Orders</span>
                                                     </td>
                                                     <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">510</h5>
+                                                        <h5 class="fs-14 my-1 fw-normal">{{ $item->quantity == 0 ? 0 : $item->quantity }}</h5>
                                                         <span class="text-muted">Stock</span>
                                                     </td>
                                                     <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">$1,798</h5>
-                                                        <span class="text-muted">Amount</span>
+                                                        <h5 class="fs-14 my-1 fw-normal">{{ $item->sku }}</h5>
+                                                        <span class="text-muted">SKU</span>
                                                     </td>
                                                 </tr>
-                                                <tr>
+
+                                                @endforeach
+                                                @else
+                                                <tr colspan="9">
                                                     <td>
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="avatar-sm bg-light rounded p-1 me-2">
-                                                                <img src="{{asset('admin_assets/images/products/img-2.png')}}" alt="" class="img-fluid d-block" />
-                                                            </div>
-                                                            <div>
-                                                                <h5 class="fs-14 my-1"><a href="apps-ecommerce-product-details.html" class="text-reset">Bentwood Chair</a></h5>
-                                                                <span class="text-muted">19 Mar 2021</span>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">$85.20</h5>
-                                                        <span class="text-muted">Price</span>
-                                                    </td>
-                                                    <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">35</h5>
-                                                        <span class="text-muted">Orders</span>
-                                                    </td>
-                                                    <td>
-                                                        <h5 class="fs-14 my-1 fw-normal"><span class="badge badge-soft-danger">Out of stock</span></h5>
-                                                        <span class="text-muted">Stock</span>
-                                                    </td>
-                                                    <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">$2982</h5>
-                                                        <span class="text-muted">Amount</span>
+                                                        <div class="text-center mt-3 mb-3">No record Found</div>
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="avatar-sm bg-light rounded p-1 me-2">
-                                                                <img src="{{asset('admin_assets/images/products/img-3.png')}}" alt="" class="img-fluid d-block" />
-                                                            </div>
-                                                            <div>
-                                                                <h5 class="fs-14 my-1"><a href="apps-ecommerce-product-details.html" class="text-reset">Borosil Paper Cup</a></h5>
-                                                                <span class="text-muted">01 Mar 2021</span>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">$14.00</h5>
-                                                        <span class="text-muted">Price</span>
-                                                    </td>
-                                                    <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">80</h5>
-                                                        <span class="text-muted">Orders</span>
-                                                    </td>
-                                                    <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">749</h5>
-                                                        <span class="text-muted">Stock</span>
-                                                    </td>
-                                                    <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">$1120</h5>
-                                                        <span class="text-muted">Amount</span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="avatar-sm bg-light rounded p-1 me-2">
-                                                                <img src="{{asset('admin_assets/images/products/img-4.png')}}" alt="" class="img-fluid d-block" />
-                                                            </div>
-                                                            <div>
-                                                                <h5 class="fs-14 my-1"><a href="apps-ecommerce-product-details.html" class="text-reset">One Seater Sofa</a></h5>
-                                                                <span class="text-muted">11 Feb 2021</span>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">$127.50</h5>
-                                                        <span class="text-muted">Price</span>
-                                                    </td>
-                                                    <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">56</h5>
-                                                        <span class="text-muted">Orders</span>
-                                                    </td>
-                                                    <td>
-                                                        <h5 class="fs-14 my-1 fw-normal"><span class="badge badge-soft-danger">Out of stock</span></h5>
-                                                        <span class="text-muted">Stock</span>
-                                                    </td>
-                                                    <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">$7140</h5>
-                                                        <span class="text-muted">Amount</span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="avatar-sm bg-light rounded p-1 me-2">
-                                                                <img src="{{asset('admin_assets/images/products/img-5.png')}}" alt="" class="img-fluid d-block" />
-                                                            </div>
-                                                            <div>
-                                                                <h5 class="fs-14 my-1"><a href="apps-ecommerce-product-details.html" class="text-reset">Stillbird Helmet</a></h5>
-                                                                <span class="text-muted">17 Jan 2021</span>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">$54</h5>
-                                                        <span class="text-muted">Price</span>
-                                                    </td>
-                                                    <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">74</h5>
-                                                        <span class="text-muted">Orders</span>
-                                                    </td>
-                                                    <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">805</h5>
-                                                        <span class="text-muted">Stock</span>
-                                                    </td>
-                                                    <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">$3996</h5>
-                                                        <span class="text-muted">Amount</span>
-                                                    </td>
-                                                </tr>
+                                                @endif
                                             </tbody>
                                         </table>
                                     </div>
