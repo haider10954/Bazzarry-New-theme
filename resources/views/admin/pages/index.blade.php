@@ -454,6 +454,7 @@
                                             <tbody>
                                             @if($recent_orders->count()>0)
                                                 @foreach($recent_orders as $item)
+
                                                     <tr>
                                                         <td>
                                                             <span class="fw-medium link-primary">{{$loop->index+1}}</span>
@@ -461,9 +462,9 @@
                                                         <td>
                                                             <div class="d-flex align-items-center">
                                                                 <div class="flex-shrink-0 me-2">
-                                                                    <img src="{{asset('admin_assets/images/users/avatar-1.jpg')}}" alt="" class="avatar-xs rounded-circle" />
+                                                                    <img src="{{asset($item->getUser->avatar)}}" alt="" class="avatar-xs rounded-circle" />
                                                                 </div>
-                                                                <div class="flex-grow-1">Alex Smith</div>
+                                                                <div class="flex-grow-1">{{ $item->getUser->name  }}</div>
                                                             </div>
                                                         </td>
                                                         <td>{{$item->payment_method}}</td>
