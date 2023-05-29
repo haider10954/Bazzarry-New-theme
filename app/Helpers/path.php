@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Category;
+use App\Models\Variant;
 
 function chieldCategory($list,$parent)
 {
@@ -9,4 +10,14 @@ function chieldCategory($list,$parent)
         return $list->whereNull('parent_id');
     }
     return $list->where('parent_id',$parent);
+}
+
+function getCategories()
+{
+    return Category::whereNull('parent_id')->get();
+}
+
+function getVariants()
+{
+    return Variant::with('values')->get();
 }

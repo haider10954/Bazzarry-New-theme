@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductOffer;
 use App\Models\Variant;
+use App\Models\VariantValue;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -124,15 +125,30 @@ class ProductController extends Controller
 
     public function addProductVariant(Request $request)
     {
-        $request->validate([
-            'variant_name' => 'required',
-            'category' => 'required',
-        ]);
-        $addProductVariant = Variant::create([
-            'category_id' => $request['category'],
-            'name' => $request['variant_name'],
-        ]);
-
+        if($request->has('type'))
+        {
+            $request->validate([
+                'variant_value' => ['required','array','min:1'],
+            ]);
+            VariantValue::where('variant_id',$request->type)->delete();
+            foreach($request->variant_value as $item)
+            {
+                VariantValue::create([
+                    'variant_id' => $request->type,
+                    'value' => $item
+                ]);
+            }
+            $addProductVariant = true;
+        }else{
+            $request->validate([
+                'variant_name' => 'required',
+                'category' => 'required',
+            ]);
+            $addProductVariant = Variant::create([
+                'category_id' => $request['category'],
+                'name' => $request['variant_name'],
+            ]);
+        }
         if($addProductVariant)
         {
             return redirect()->back();

@@ -26,23 +26,21 @@ class ProductController extends Controller
             ->get();
 
         // Get Review
-        $Product_review = Review::with('getProduct','getUser')->where('product_id', $product->id)->orderBy('id','desc')->limit(5)->get();
+        $Product_review = Review::with('getProduct', 'getUser')->where('product_id', $product->id)->orderBy('id', 'desc')->limit(5)->get();
 
         $firstReview = Review::where('product_id', $product->id)->first();
         $reviews = Review::where('product_id', $product->id)->get();
         $averageRating = 0;
-        $countrating= 0;
+        $countrating = 0;
         if ($reviews->count() > 0) {
 
-            $totalRatting = DB::table('reviews')->where('product_id',$product->id)->sum('rating');
+            $totalRatting = DB::table('reviews')->where('product_id', $product->id)->sum('rating');
             $averageRating = $totalRatting / ($reviews->count() * 5) * 100;
 
-            $countrating = $totalRatting / $reviews->count()  ;
-
-
+            $countrating = $totalRatting / $reviews->count();
         }
 
-        return view('user.pages.product-details', compact('product','related_products' ,'Product_review', 'reviews', 'firstReview', 'averageRating','countrating'));
+        return view('user.pages.product-details', compact('product', 'related_products', 'Product_review', 'reviews', 'firstReview', 'averageRating', 'countrating'));
     }
 
     public function add_to_cart(Request $request)
@@ -55,7 +53,7 @@ class ProductController extends Controller
         if (isset($cart[$id])) {
             $cart[$id]['quantity']++;
         } else {
-            $actualPrize = $product->price - ($product->discount  /100 * $product->price);
+            $actualPrize = $product->price - ($product->discount  / 100 * $product->price);
             $cart[$id] = [
                 "product_id" => $product->id,
                 "product_name" => $product->title,
@@ -77,12 +75,9 @@ class ProductController extends Controller
     {
         if ($request->id) {
             $cart = session()->get('cart');
-            if($request->type == "Minus")
-            {
+            if ($request->type == "Minus") {
                 $cart[$request->id]["quantity"]--;
-            }
-            else
-            {
+            } else {
                 $cart[$request->id]["quantity"]++;
             }
 
@@ -108,32 +103,73 @@ class ProductController extends Controller
             ]);
         }
     }
+
+    public function generateCombinations($arrays, $index = 0, $currentCombination = [])
+    {
+        if ($index >= count(array_keys($arrays))) {
+            return [$currentCombination];
+        }
+
+        $results = [];
+
+        foreach ($arrays[array_keys($arrays)[$index]] as $value) {
+            $k = array_keys($arrays)[$index];
+            $currentCombination[$k] = $value;
+
+            $combinations = $this->generateCombinations($arrays, $index + 1, $currentCombination);
+            foreach ($combinations as $combination) {
+                $results[] = $combination;
+            }
+        }
+
+        return $results;
+    }
+
     public function getAllProducts()
     {
+        $arr = request('variant') ?? [];
+        $combinations = [];
+        if (count($arr) > 0) {
+            $combinations = $this->generateCombinations($arr);
+        }
+
+
         $products = \App\Models\Product::query()
-            ->when(request('category') && !empty(request('category')),function($query){
-                $id = Category::select('id')->where('name',request('category'))->first();
-                $query->where('category_id',$id->id);
+            ->when(count($combinations) > 0, function ($q) use ($combinations) {
+                $q->whereIn('id', function ($query) use ($combinations) {
+                    $query_str = $query->select('product_id')->from('product_variants');
+                    foreach ($combinations as $val) {
+                        $query_str->orWhere(function($subQuery) use($val){
+                            foreach ($val as $k => $v) {
+                                $comb = '"' . $k . '":"' . $v . '"';
+                                $subQuery->where('variant_string', 'LIKE', '%' . $comb . '%');
+                            }
+                        });
+                        
+                    }
+                });
+            })
+            ->when(request('category') && !empty(request('category')), function ($query) {
+                $id = Category::select('id')->where('name', request('category'))->first();
+                $query->where('category_id', $id->id);
             })
             ->with('getCategory')
-            ->when(request('search') && !empty(request('search')),function($query){
-                $query->where('title','LIKE','%'.request('search').'%');            
+            ->when(request('search') && !empty(request('search')), function ($query) {
+                $query->where('title', 'LIKE', '%' . request('search') . '%');
             })
-            ->orderBy('id','desc')
+            ->orderBy('id', 'desc')
             ->get();
-        return view('user.pages.products',compact('products'));
+        return view('user.pages.products', compact('products'));
     }
     public function clearCart()
     {
         $cart = session()->get('cart');
-        if($cart)
-        {
+        if ($cart) {
             session()->forget('cart');
             return response()->json([
                 'success' => true,
                 'message' => 'Cart items removed successfully'
             ]);
         }
-
     }
 }

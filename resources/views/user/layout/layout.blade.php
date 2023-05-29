@@ -849,6 +849,7 @@
         });
     });
 </script>
+@yield('script')
 <!-- Plugin JS File -->
 </body>
 
