@@ -32,81 +32,35 @@
                                     <label>Filter :</label>
                                     <a href="#" class="btn btn-dark btn-link filter-clean">Clean All</a>
                                 </div>
-                                <!-- Start of Collapsible widget -->
                                 <div class="widget widget-collapsible">
-                                    <h3 class="widget-title"><span>All Categories</span></h3>
-                                    <ul class="widget-body filter-items search-ul">
-                                        <li><a href="#">Accessories</a></li>
-                                        <li><a href="#">Babies</a></li>
-                                        <li><a href="#">Beauty</a></li>
-                                        <li><a href="#">Decoration</a></li>
-                                        <li><a href="#">Electronics</a></li>
-                                        <li><a href="#">Fashion</a></li>
-                                        <li><a href="#">Food</a></li>
-                                        <li><a href="#">Furniture</a></li>
-                                        <li><a href="#">Kitchen</a></li>
-                                        <li><a href="#">Medical</a></li>
-                                        <li><a href="#">Sports</a></li>
-                                        <li><a href="#">Watches</a></li>
+                                    <h3 class="widget-title"><span>Category</span></h3>
+                                    <ul class="cate_filter widget-body filter-items item-check mt-1">
+                                        @foreach(getCategories() as $cate)    
+                                        <li data-category="{{ $cate->name }}" onclick="setVariant({{ $cate->id }})"><a href="#">{{ $cate->name }}</a></li>
+                                        @endforeach
                                     </ul>
                                 </div>
-                                <!-- End of Collapsible Widget -->
-
                                 <!-- Start of Collapsible Widget -->
-                                <div class="widget widget-collapsible">
+                                <div class="price_filter widget widget-collapsible">
                                     <h3 class="widget-title"><span>Price</span></h3>
                                     <div class="widget-body">
                                         <form class="price-range">
                                             <input type="number" name="min_price" class="min_price text-center"
                                                    placeholder="Rs.min"><span class="delimiter">-</span><input
                                                 type="number" name="max_price" class="max_price text-center"
-                                                placeholder="Rs.max"><a href="#"
-                                                                        class="btn btn-primary btn-rounded">Go</a>
+                                                placeholder="Rs.max">
                                         </form>
                                     </div>
                                 </div>
                                 <!-- End of Collapsible Widget -->
 
                                 <!-- Start of Collapsible Widget -->
-                                <div class="widget widget-collapsible">
-                                    <h3 class="widget-title"><span>Size</span></h3>
-                                    <ul class="widget-body filter-items item-check mt-1">
-                                        <li><a href="#">Extra Large</a></li>
-                                        <li><a href="#">Large</a></li>
-                                        <li><a href="#">Medium</a></li>
-                                        <li><a href="#">Small</a></li>
-                                    </ul>
-                                </div>
+                               
                                 <!-- End of Collapsible Widget -->
 
                                 <!-- Start of Collapsible Widget -->
-                                <div class="widget widget-collapsible">
-                                    <h3 class="widget-title"><span>Brand</span></h3>
-                                    <ul class="widget-body filter-items item-check mt-1">
-                                        <li><a href="#">Elegant Auto Group</a></li>
-                                        <li><a href="#">Green Grass</a></li>
-                                        <li><a href="#">Node Js</a></li>
-                                        <li><a href="#">NS8</a></li>
-                                        <li><a href="#">Red</a></li>
-                                        <li><a href="#">Skysuite Tech</a></li>
-                                        <li><a href="#">Sterling</a></li>
-                                    </ul>
-                                </div>
-                                <!-- End of Collapsible Widget -->
-
-                                <!-- Start of Collapsible Widget -->
-                                <div class="widget widget-collapsible">
-                                    <h3 class="widget-title"><span>Color</span></h3>
-                                    <ul class="widget-body filter-items item-check">
-                                        <li><a href="#">Black</a></li>
-                                        <li><a href="#">Blue</a></li>
-                                        <li><a href="#">Brown</a></li>
-                                        <li><a href="#">Green</a></li>
-                                        <li><a href="#">Grey</a></li>
-                                        <li><a href="#">Orange</a></li>
-                                        <li><a href="#">Yellow</a></li>
-                                    </ul>
-                                </div>
+                                
+                                <a href="javascript:void(0)" onclick="applyFilter();" class="btn btn-primary btn-rounded">Apply Filter</a>
                                 <!-- End of Collapsible Widget -->
                             </div>
                             <!-- End of Sidebar Content -->
@@ -257,4 +211,64 @@
             </div>
         </div>
     </main>
+@endsection
+
+@section('script')
+<script>
+    let variants = @json(getVariants());
+    $(".cate_filter li").click(function(){
+        $(".cate_filter li").removeClass("active");
+    });
+
+    @if(request('category'))
+    $("li[data-category={{ request('category') }}]").click();
+    $("li[data-category={{ request('category') }}]").addClass("active");
+        @if(request('variant'))
+            @foreach(request('variant') as $key => $value)
+                @foreach ($value as $val)
+                $("li[data-value={{ $val }}]").addClass("active");
+                @endforeach
+            @endforeach
+        @endif
+    @endif
+    function setVariant(id)
+    {
+        $(".other_filter").remove();
+        $.each(variants,function(index,item){
+            if(item.category_id == id)
+            {
+                let child = ``;
+                $.each(item.values,function(ind,val){
+                    child += `<li data-value="${val.value}"><a href="#">${val.value}</a></li>`
+                });
+                if(child !== "")
+                {
+                    $(".price_filter").after(`<div class="other_filter widget widget-collapsible">
+                                    <h3 data-variant="${item.name}" class="widget-title"><span>${item.name}</span></h3>
+                                    <ul class="widget-body filter-items item-check mt-1">
+                                        ${child}
+                                    </ul>
+                                </div>`);
+                }
+            }
+        });
+    }
+    function applyFilter()
+    {
+        let form = `<form class="filter_form">`;
+        form += `<input type="hidden" name="category" value="${$("li[data-category].active").attr("data-category")}">`;
+        $("h3[data-variant]").each(function(){
+            let v = $(this).attr("data-variant");
+            $(this).siblings("ul").children("li").each(function(){
+                if($(this).hasClass("active"))
+                {
+                    form += `<input type="hidden" name="variant[${v}][]" value="${$(this).attr("data-value")}">`;
+                }
+            });
+        });
+        form += `</form>`;
+        $("body").append(form);
+        $(document).find(".filter_form").submit();
+    }
+</script>
 @endsection
