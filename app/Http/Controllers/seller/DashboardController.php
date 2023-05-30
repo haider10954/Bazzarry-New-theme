@@ -109,7 +109,7 @@ class DashboardController extends Controller
 
         // Best Products
         $best_products = Product::query()->where('added_id', auth('seller')->id())->where('sale_count', '>', 0)->orderBy('sale_count', 'DESC')->get();
-        // dd($best_product);
+        
 
 
 
@@ -124,7 +124,7 @@ class DashboardController extends Controller
             'all_orders',
             'list',
             'recent_orders',
-            'best_product',
+            'best_products',
         ));
     }
 }
