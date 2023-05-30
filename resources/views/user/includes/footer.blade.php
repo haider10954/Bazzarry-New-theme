@@ -38,8 +38,8 @@
             <div class="row">
                 <div class="col-lg-4 col-sm-6">
                     <div class="widget widget-about">
-                        <a href="demo2.html" class="logo-footer">
-                            <img src="{{asset('user_assets/images/demos/demo2/footer-logo.png')}}" alt="logo-footer" width="144"
+                        <a href="/" class="logo-footer">
+                            <img src="{{asset('user_assets/images/demos/demo2/logo.png')}}" alt="logo-footer" width="144"
                                  height="45" />
                         </a>
                         <div class="widget-body">
@@ -121,7 +121,7 @@
         </div>
         <div class="footer-bottom">
             <div class="footer-left">
-                <p class="copyright">Copyright © 2021 Wolmart Store. All Rights Reserved.</p>
+                <p class="copyright">Copyright © 2023 Bazaarry. All Rights Reserved.</p>
             </div>
             <div class="footer-right">
                 <span class="payment-label mr-lg-8">We're using safe payment for</span>

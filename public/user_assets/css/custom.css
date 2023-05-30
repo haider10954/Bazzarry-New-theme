@@ -190,3 +190,11 @@
 .chat-input button:hover {
     background-color: #2468b8;
 }
+
+.fs-6{
+    font-size: 16px;
+}
+.ms-2
+{
+    margin-left: 1rem;
+}

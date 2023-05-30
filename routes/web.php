@@ -33,6 +33,8 @@ Route::post('fetch-states', [UserAuthController::class, 'fetchStates'])->name('C
 Route::post('fetch-cities', [UserAuthController::class, 'fetchCities'])->name('CheckState');
 
 Route::get('/', [IndexController::class, 'index'])->name('index');
+Route::get('/about-us', function () {return view('user.pages.about-us'); })->name('about-us');
+Route::get('/contact-us', function () {return view('user.pages.contact-us'); })->name('contact-us');
 Route::post('/user-login', [UserAuthController::class, 'userLogin'])->name('user_login');
 Route::post('/user-register', [UserAuthController::class, 'user_signUp'])->name('user_register');
 //User Logout

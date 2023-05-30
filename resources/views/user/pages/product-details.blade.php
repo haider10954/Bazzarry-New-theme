@@ -97,11 +97,11 @@
                         <div class="product-price">
                             <div class="d-flex justifiy-content-between align-items-center">
                                 @if (!empty($DiscountedPrice))
-                                <del>${{ $product->price  }}</del>
+                                <del class="fs-6">Rs. {{ $product->price  }}</del>
                                 @else
-                                <div class="new-price">${{ $product->price  }}</div>
+                                <div class="new-price">Rs. {{ $product->price  }}</div>
                                 @endif
-                                <div class="new-price {{ empty($DiscountedPrice) ? 'd-none' : 'd-block' }} me-2">${{ $DiscountedPrice }}</div>
+                                <div class="new-price {{ empty($DiscountedPrice) ? 'd-none' : 'd-block' }} ms-2" > Rs. {{ $DiscountedPrice }}</div>
                             </div>
                         </div>
 

@@ -104,15 +104,13 @@ class IndexController extends Controller
 
         $list = collect($list);
 
-        // Recent Orders 
+        // Recent Orders
 
         $recent_orders = Order::query()->latest()->get();
 
 
         // Best Products
         $best_product = Product::query()->where('sale_count' , '>' , 0)->orderBy('sale_count', 'DESC')->get();
-        // dd($best_product);
-
         return view('admin.pages.index', compact(
             'seller',
             'all_products',

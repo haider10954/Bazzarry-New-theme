@@ -104,7 +104,7 @@ class DashboardController extends Controller
 
         $list = collect($list);
 
-        // Recent Orders 
+        // Recent Orders
         $recent_orders = Order::query()->latest()->get();
 
         // Best Products
@@ -124,7 +124,7 @@ class DashboardController extends Controller
             'all_orders',
             'list',
             'recent_orders',
-            'best_products',
+            'best_product',
         ));
     }
 }

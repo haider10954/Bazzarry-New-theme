@@ -228,6 +228,12 @@
                                 <li>
                                     <a href="{{route('products')}}">Shop</a>
                                 </li>
+                                <li>
+                                    <a href="{{route('about-us')}}">About Us</a>
+                                </li>
+                                <li>
+                                    <a href="{{route('contact-us')}}">Contact Us</a>
+                                </li>
                             </ul>
                         </nav>
                     </div>
