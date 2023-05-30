@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class VariantValue extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
+    
+    public $timestamps = false;
+
 }

@@ -108,7 +108,7 @@ class DashboardController extends Controller
         $recent_orders = Order::query()->latest()->get();
 
         // Best Products
-        $best_product = Product::query()->where('added_id', auth('seller')->id())->where('sale_count', '>', 0)->orderBy('sale_count', 'DESC')->get();
+        $best_products = Product::query()->where('added_id', auth('seller')->id())->where('sale_count', '>', 0)->orderBy('sale_count', 'DESC')->get();
         // dd($best_product);
 
 

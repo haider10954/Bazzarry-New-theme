@@ -237,44 +237,48 @@
                                     <div class="table-responsive table-card">
                                         <table class="table table-hover table-centered align-middle table-nowrap mb-0">
                                             <tbody>
-                                            @if($best_product->count()>0)
-                                                @foreach($best_product as $item)
-                                                    <tr>
-                                                        <td>
-                                                            <div class="d-flex align-items-center">
-                                                                <div class="avatar-sm bg-light rounded p-1 me-2">
-                                                                    <img src="{{asset('admin_assets/images/products/img-1.png')}}" alt="" class="img-fluid d-block" />
-                                                                </div>
-                                                                <div>
-                                                                    <h5 class="fs-14 my-1"><a href="apps-ecommerce-product-details.html" class="text-reset">Branded T-Shirts</a></h5>
-                                                                    <span class="text-muted">24 Apr 2021</span>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <h5 class="fs-14 my-1 fw-normal">$29.00</h5>
-                                                            <span class="text-muted">Price</span>
-                                                        </td>
-                                                        <td>
-                                                            <h5 class="fs-14 my-1 fw-normal">62</h5>
-                                                            <span class="text-muted">Orders</span>
-                                                        </td>
-                                                        <td>
-                                                            <h5 class="fs-14 my-1 fw-normal">510</h5>
-                                                            <span class="text-muted">Stock</span>
-                                                        </td>
-                                                        <td>
-                                                            <h5 class="fs-14 my-1 fw-normal">$1,798</h5>
-                                                            <span class="text-muted">Amount</span>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            @else
-                                                <tr>
-                                                    <td colspan="5">No Record Found...</td>
-                                                </tr>
-                                            @endif
+                                                @if ($best_product->count() > 0)
+                                                @foreach ($best_product as $item)
 
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="avatar-sm bg-light rounded p-1 me-2">
+                                                                <img src="{{asset($item->images[0])}}" alt="" class="img-fluid d-block" />
+                                                            </div>
+                                                            <div>
+                                                                <h5 class="fs-14 my-1"><a href="" class="text-reset">{{ $item->title }}</a></h5>
+                                                                <span class="text-muted">{{\Carbon\Carbon::parse($item->created_at)->format('d M, Y')}}</span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <h5 class="fs-14 my-1 fw-normal">Rs. {{ number_format($item->price) }}</h5>
+                                                        <span class="text-muted">Price</span>
+                                                    </td>
+                                                    <td>
+                                                        <h5 class="fs-14 my-1 fw-normal">{{ $item->sale_count }}</h5>
+                                                        <span class="text-muted">Orders</span>
+                                                    </td>
+                                                    <td>
+                                                        <h5 class="fs-14 my-1 fw-normal">{{ $item->quantity == 0 ? 0 : $item->quantity }}</h5>
+                                                        <span class="text-muted">Stock</span>
+                                                    </td>
+                                                    <td>
+                                                        <h5 class="fs-14 my-1 fw-normal">{{ $item->sku }}</h5>
+                                                        <span class="text-muted">SKU</span>
+                                                    </td>
+                                                </tr>
+
+                                                @endforeach
+                                                @else
+                                                <tr colspan="9">
+                                                    <td>
+                                                        <div class="text-center mt-3 mb-3">No record Found</div>
+                                                    </td>
+                                                </tr>
+                                                @endif
+                                                >>>>>>> d84eb007f0aab39701e9aaf5c79e95f4f51b2401
                                             </tbody>
                                         </table>
                                     </div>
@@ -329,44 +333,44 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            @if($recent_orders->count()>0)
+                                                @if($recent_orders->count()>0)
                                                 @foreach($recent_orders as $item)
 
-                                                    <tr>
-                                                        <td>
-                                                            <span class="fw-medium link-primary">{{$loop->index+1}}</span>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex align-items-center">
-                                                                <div class="flex-shrink-0 me-2">
-                                                                    <img src="{{asset($item->getUser->avatar)}}" alt="" class="avatar-xs rounded-circle" />
-                                                                </div>
-                                                                <div class="flex-grow-1">{{ $item->getUser->name  }}</div>
+                                                <tr>
+                                                    <td>
+                                                        <span class="fw-medium link-primary">{{$loop->index+1}}</span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="flex-shrink-0 me-2">
+                                                                <img src="{{asset($item->getUser->avatar)}}" alt="" class="avatar-xs rounded-circle" />
                                                             </div>
-                                                        </td>
-                                                        <td>{{$item->payment_method}}</td>
-                                                        <td>
-                                                            <span class="text-success">Rs. {{$item->total}}</span>
-                                                        </td>
-                                                        <td>Rs. {{$item->total}}</td>
-                                                        <td>
-                                                            @if($item->status == 0)
-                                                                <span class="badge badge-soft-warning">Pending</span>
-                                                            @else
-                                                                <span class="badge badge-soft-success">Paid</span>
-                                                            @endif
+                                                            <div class="flex-grow-1">{{ $item->getUser->name  }}</div>
+                                                        </div>
+                                                    </td>
+                                                    <td>{{$item->payment_method}}</td>
+                                                    <td>
+                                                        <span class="text-success">Rs. {{$item->total}}</span>
+                                                    </td>
+                                                    <td>Rs. {{$item->total}}</td>
+                                                    <td>
+                                                        @if($item->status == 0)
+                                                        <span class="badge badge-soft-warning">Pending</span>
+                                                        @else
+                                                        <span class="badge badge-soft-success">Paid</span>
+                                                        @endif
 
-                                                        </td>
-                                                        <td>
-                                                            <h5 class="fs-14 fw-medium mb-0">5.0<span class="text-muted fs-11 ms-1">(61 votes)</span></h5>
-                                                        </td>
-                                                    </tr><!-- end tr -->
+                                                    </td>
+                                                    <td>
+                                                        <h5 class="fs-14 fw-medium mb-0">5.0<span class="text-muted fs-11 ms-1">(61 votes)</span></h5>
+                                                    </td>
+                                                </tr><!-- end tr -->
                                                 @endforeach
-                                            @else
+                                                @else
                                                 <tr>
                                                     <td colspan="7">No Record Found..</td>
                                                 </tr>
-                                            @endif
+                                                @endif
                                             </tbody><!-- end tbody -->
                                         </table><!-- end table -->
                                     </div>
@@ -864,11 +868,11 @@
         series: [{
             name: "Orders",
             type: "area",
-            data: @json($list->pluck('ordersCount'))
+            data: @json($list - > pluck('ordersCount'))
         }, {
             name: "Earnings",
             type: "bar",
-            data: @json($list->pluck('totalAmount'))
+            data: @json($list - > pluck('totalAmount'))
         }],
         chart: {
             height: 370,
@@ -893,7 +897,7 @@
             }
         },
         xaxis: {
-            categories: @json($list->pluck('month')),
+            categories: @json($list - > pluck('month')),
             axisTicks: {
                 show: !1
             },
@@ -964,7 +968,19 @@
     $(document).ready(function() {
         var options, chart, chartDonutBasicColors = getChartColorsArray("store-visits-source");
         chartDonutBasicColors && (options = {
-            series: [{{$all_products}}, {{$published_product}}, {{$unpublished_product}}],
+            series: [{
+                {
+                    $all_products
+                }
+            }, {
+                {
+                    $published_product
+                }
+            }, {
+                {
+                    $unpublished_product
+                }
+            }],
             labels: ["All Products", "Published Products", "Unpublished Products"],
             chart: {
                 height: 333,
