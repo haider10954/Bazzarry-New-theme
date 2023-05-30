@@ -868,11 +868,11 @@
         series: [{
             name: "Orders",
             type: "area",
-            data: @json($list - > pluck('ordersCount'))
+            data: @json($list -> pluck('ordersCount'))
         }, {
             name: "Earnings",
             type: "bar",
-            data: @json($list - > pluck('totalAmount'))
+            data: @json($list -> pluck('totalAmount'))
         }],
         chart: {
             height: 370,
@@ -897,7 +897,7 @@
             }
         },
         xaxis: {
-            categories: @json($list - > pluck('month')),
+            categories: @json($list -> pluck('month')),
             axisTicks: {
                 show: !1
             },
@@ -968,19 +968,7 @@
     $(document).ready(function() {
         var options, chart, chartDonutBasicColors = getChartColorsArray("store-visits-source");
         chartDonutBasicColors && (options = {
-            series: [{
-                {
-                    $all_products
-                }
-            }, {
-                {
-                    $published_product
-                }
-            }, {
-                {
-                    $unpublished_product
-                }
-            }],
+            series: [{{$all_products}}, {{$published_product}}, {{$unpublished_product}}],
             labels: ["All Products", "Published Products", "Unpublished Products"],
             chart: {
                 height: 333,

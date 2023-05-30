@@ -677,6 +677,8 @@
             },
             success: function(res) {
                 if (res.success === true) {
+                    $('#getResponse').prop('disabled',false);
+                    $('#getResponse').html('Save Changes');
                     console.log(res);
                     $('#exampleModal').modal('hide');
                     // Update the CKEditor field with the response
