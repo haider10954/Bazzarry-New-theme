@@ -35,7 +35,7 @@
                                 <div class="widget widget-collapsible">
                                     <h3 class="widget-title"><span>Category</span></h3>
                                     <ul class="cate_filter widget-body filter-items item-check mt-1">
-                                        @foreach(getCategories() as $cate)    
+                                        @foreach(getCategories() as $cate)
                                         <li data-category="{{ $cate->name }}" onclick="setVariant({{ $cate->id }})"><a href="#">{{ $cate->name }}</a></li>
                                         @endforeach
                                     </ul>
@@ -55,11 +55,11 @@
                                 <!-- End of Collapsible Widget -->
 
                                 <!-- Start of Collapsible Widget -->
-                               
+
                                 <!-- End of Collapsible Widget -->
 
                                 <!-- Start of Collapsible Widget -->
-                                
+
                                 <a href="javascript:void(0)" onclick="applyFilter();" class="btn btn-primary btn-rounded">Apply Filter</a>
                                 <!-- End of Collapsible Widget -->
                             </div>

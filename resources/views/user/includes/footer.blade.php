@@ -44,18 +44,11 @@
                         </a>
                         <div class="widget-body">
                             <p class="widget-about-title">Got Question? Call us 24/7</p>
-                            <a href="tel:18005707777" class="widget-about-call">1-800-570-7777</a>
+                            <a href="tel:+923037123272" class="widget-about-call">+923037123272</a>
                             <p class="widget-about-desc">Register now to get updates on pronot get up icons
                                 & coupons ster now toon.
                             </p>
 
-                            <div class="social-icons social-icons-colored">
-                                <a href="#" class="social-icon social-facebook w-icon-facebook"></a>
-                                <a href="#" class="social-icon social-twitter w-icon-twitter"></a>
-                                <a href="#" class="social-icon social-instagram w-icon-instagram"></a>
-                                <a href="#" class="social-icon social-youtube w-icon-youtube"></a>
-                                <a href="#" class="social-icon social-pinterest w-icon-pinterest"></a>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -108,7 +101,7 @@
                             <h6 class="category-name">{{$item->name}}:</h6>
                             @php
                                 $getProducts = Illuminate\Support\Facades\DB::table('products')->where('status', 1)->where('category_id',$item->id)->get()
-                                @endphp
+                            @endphp
 
                             @foreach($getProducts as $value)
                                 <a href="{{route('product_details',$value->slug)}}">{{$value->title}}</a>

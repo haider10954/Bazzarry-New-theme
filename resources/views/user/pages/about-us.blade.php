@@ -1,5 +1,5 @@
 @extends('user.layout.layout',['useAssets'=>['vendor_swiper','magnific','styles']])
-@section('title','Shopping Cart')
+@section('title','About Us')
 @section('custom-class','about-us')
 @section('content')
     <main class="main">
@@ -29,8 +29,7 @@
                     <h2 class="title title-center">
                         We’re Devoted Marketing<br>Consultants Helping Your Business Grow
                     </h2>
-                    <p class=" mx-auto text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                        labore et dolore magna aliqua. Venenatis tellu metus</p>
+                    <p class=" mx-auto text-center">Whether you're searching for the latest fashion trends, tech gadgets, home essentials, or unique gifts, we've got you covered.</p>
                     <figure class="br-lg">
                         <img src="{{asset('user_assets/images/pages/about_us/1.jpg')}}" alt="Banner"
                              width="1240" height="540" style="background-color: #D0C1AE;" />
@@ -48,10 +47,7 @@
                                     </div>
                                     <div class="card-body expanded" id="collapse3-1">
                                         <p class="mb-0">
-                                            Lorem ipsum dolor sit eiusamet, consectetur adipiscing elit,
-                                            sed do eius mod tempor incididunt ut labore
-                                            et dolore magna aliqua. Venenatis tell
-                                            us in metus vulputate eu scelerisque felis. Vel pretium vulp.
+                                            At Bazaarry, we take pride in our exceptional customer service. Our dedicated and friendly customer support team is here to assist you every step of the way, ensuring that your shopping experience is smooth and satisfying.
                                         </p>
                                     </div>
                                 </div>
@@ -61,10 +57,7 @@
                                     </div>
                                     <div class="card-body collapsed" id="collapse3-2">
                                         <p class="mb-0">
-                                            Lorem ipsum dolor sit eiusamet, consectetur adipiscing elit,
-                                            sed do eius mod tempor incididunt ut labore
-                                            et dolore magna aliqua. Venenatis tell
-                                            us in metus vulputate eu scelerisque felis. Vel pretium vulp.
+                                            Our online consultation platform allows you to connect with qualified experts through secure and confidential channels. You can schedule virtual appointments, have real-time video or audio consultations, or exchange messages with professionals in your desired field.
                                         </p>
                                     </div>
                                 </div>
@@ -74,9 +67,7 @@
                                     </div>
                                     <div class="card-body collapsed" id="collapse3-3">
                                         <p class="mb-0">
-                                            Lorem ipsum dolor sit eiusamet, consectetur adipiscing elit,
-                                            sed do eius mod tempor incididunt ut labore
-                                            et dolore magna aliqua. Venenatis tell
+                                            At Bazaarry, we believe in continuous improvement and ongoing training for our sales team. Our sales managers provide coaching, mentorship, and support to enhance skills, boost motivation, and foster a high-performance sales culture.
                                             us in metus vulputate eu scelerisque felis. Vel pretium vulp.
                                         </p>
                                     </div>
@@ -110,8 +101,8 @@
                                     <span class="count-to" data-to="15">0</span>
                                     <span>M+</span>
                                     <h4 class="title title-center">Products For Sale</h4>
-                                    <p>Diam maecenas ultricies mi eget mauris<br>
-                                        Nibh tellus molestie nunc non</p>
+                                    <p>Find everything you need to create a cozy<br> and functional home.
+                                        </p>
                                 </div>
                             </div>
                             <div class="swiper-slide counter-wrap">
@@ -120,8 +111,8 @@
                                     <span class="count-to" data-to="25">0</span>
                                     <span>B+</span>
                                     <h4 class="title title-center">Community Earnings</h4>
-                                    <p>Diam maecenas ultricies mi eget mauris<br>
-                                        Nibh tellus molestie nunc non</p>
+                                    <p>Experience the power of effective<br> sales management with Bazaarry.
+                                        </p>
                                 </div>
                             </div>
                             <div class="swiper-slide counter-wrap">
@@ -129,8 +120,8 @@
                                     <span class="count-to" data-to="100">0</span>
                                     <span>M+</span>
                                     <h4 class="title title-center">Growing Buyers</h4>
-                                    <p>Diam maecenas ultricies mi eget mauris<br>
-                                        Nibh tellus molestie nunc non</p>
+                                    <p>Customer satisfaction is at the core<br> of our sales management philosophy.
+                                        </p>
                                 </div>
                             </div>
                         </div>
@@ -142,8 +133,8 @@
             <section class="member-section mt-10 pt-9 mb-10 pb-4">
                 <div class="container">
                     <h4 class="title title-center mb-3">Meet Our Leaders</h4>
-                    <p class="text-center mb-8">Nunc id cursus metus aliquam. Libero id faucibus nisl tincidunt eget. Aliquam<br>
-                        maecenas ultricies mi eget mauris. Volutpat ac</p>
+                    <p class="text-center mb-8">Our leaders are passionate, experienced professionals who bring a wealth<br> of expertise to their respective roles.
+                        </p>
                     <div class="swiper-container swiper-theme" data-swiper-options="{
                             'spaceBetween': 20,
                             'slidesPerView': 1,

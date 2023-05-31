@@ -145,7 +145,7 @@ class ProductController extends Controller
                                 $subQuery->where('variant_string', 'LIKE', '%' . $comb . '%');
                             }
                         });
-                        
+
                     }
                 });
             })

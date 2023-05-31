@@ -136,7 +136,7 @@
         <!-- Start of New Arrival -->
         <div class="title-link-wrapper mb-3 appear-animate">
             <h2 class="title title-deals mb-1">New Arrival</h2>
-            <a href="#" class="font-weight-bold ls-25">More Products<i class="w-icon-long-arrow-right"></i></a>
+            <a href="{{route('products')}}" class="font-weight-bold ls-25">More Products<i class="w-icon-long-arrow-right"></i></a>
         </div>
 
         <div class="swiper-container swiper-theme product-deals-wrapper appear-animate mb-7" data-swiper-options="{
@@ -197,7 +197,7 @@
                                 @endphp
                                 <ins class="new-price">
                                     @if (!empty($discount))
-                                    <del>${{ $item->price }}</del> - ${{ $discount }}
+                                    <del class="old-price">Rs. {{ $item->price }}</del> - Rs. {{ $discount }}
                                     @else
                                     ${{ $item->price }}
                                     @endif
@@ -262,7 +262,7 @@
                         <h3 class="banner-title text-white ls-25 mb-0">{{ $item->getCategory->name }}</h3>
                         <div class="banner-price-info text-white font-weight-bold text-uppercase mb-1">Starting
                             At
-                            <strong class="text-secondary">${{ $item->getProduct->price }}</strong>
+                            <strong class="text-secondary">Rs. {{ $item->getProduct->price }}</strong>
                         </div>
                         <hr class="banner-divider bg-white" />
                         <a href="{{ route('products') }}" class="btn btn-white btn-link btn-underline btn-icon-right">
@@ -1449,7 +1449,7 @@
                                 @php
                                 $discount = $item->getProduct->price - ($item->getProduct->discount /100 * $item->getProduct->price)
                                 @endphp
-                                <ins class="new-price">$ {{$discount}} </ins>
+                                <ins class="new-price">Rs. {{$discount}} </ins>
                             </div>
                         </div>
                     </div>

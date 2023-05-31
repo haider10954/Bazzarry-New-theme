@@ -29,9 +29,7 @@
                     <h3 class="title title-center mb-3">Contact
                         Information
                     </h3>
-                    <p class="text-center">Lorem ipsum dolor sit amet,
-                        consectetur
-                        adipiscing elit, sed do eiusmod tempor incididunt ut</p>
+                    <p class="text-center">We understand the importance of staying connected with our valued customers.</p>
                 </section>
                 <!-- End of Contact Title Section -->
 
@@ -58,7 +56,7 @@
                                     </span>
                                 <div class="icon-box-content">
                                     <h4 class="icon-box-title">E-mail Address</h4>
-                                    <p><a href="https://portotheme.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f598949c99b5908d9498859990db969a98">[email&#160;protected]</a></p>
+                                    <p><a href="https://portotheme.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f598949c99b5908d9498859990db969a98">haseebraza293@gmail.com</a></p>
                                 </div>
                             </div>
                             <div class="swiper-slide icon-box text-center icon-box-primary">
@@ -67,7 +65,7 @@
                                     </span>
                                 <div class="icon-box-content">
                                     <h4 class="icon-box-title">Phone Number</h4>
-                                    <p>(123) 456-7890 / (123) 456-9870</p>
+                                    <p>+92-303-7123272</p>
                                 </div>
                             </div>
                             <div class="swiper-slide icon-box text-center icon-box-primary">
@@ -76,7 +74,7 @@
                                     </span>
                                 <div class="icon-box-content">
                                     <h4 class="icon-box-title">Address</h4>
-                                    <p>Lawrence, NY 11345, USA</p>
+                                    <p>Faisalabad, 38000, Pakistan</p>
                                 </div>
                             </div>
                             <div class="swiper-slide icon-box text-center icon-box-primary">
@@ -106,9 +104,7 @@
                                     </div>
                                     <div id="collapse1" class="card-body expanded">
                                         <p class="mb-0">
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temp orincid
-                                            idunt ut labore et dolore magna aliqua. Venenatis tellus in metus vulp utate eu sceler
-                                            isque felis. Vel pretium.
+                                            To initiate the cancellation process, we recommend reaching out to our customer support team as soon as possible. You can call our dedicated helpline or send us an email with your order details and the reason for cancellation.
                                         </p>
                                     </div>
                                 </div>
@@ -119,9 +115,7 @@
                                     </div>
                                     <div id="collapse2" class="card-body collapsed">
                                         <p class="mb-0">
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temp orincid
-                                            idunt ut labore et dolore magna aliqua. Venenatis tellus in metus vulp utate eu sceler
-                                            isque felis. Vel pretium.
+                                            It is essential to provide accurate and complete information during the registration process. If there are any missing or incorrect details in your registration, it could result in a delay as we may need to reach out to you for clarification or additional information. Double-check the information you provided during registration to ensure its accuracy.
                                         </p>
                                     </div>
                                 </div>
@@ -132,9 +126,7 @@
                                     </div>
                                     <div id="collapse3" class="card-body collapsed">
                                         <p class="mb-0">
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temp orincid
-                                            idunt ut labore et dolore magna aliqua. Venenatis tellus in metus vulp utate eu sceler
-                                            isque felis. Vel pretium.
+                                            Browse through the available products on the website or use the search function to find specific items. You can explore different categories, apply filters, and read product descriptions, reviews, and specifications to make informed purchasing decisions.
                                         </p>
                                     </div>
                                 </div>
@@ -145,9 +137,7 @@
                                     </div>
                                     <div id="collapse4" class="card-body collapsed">
                                         <p class="mb-0">
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temp orincid
-                                            idunt ut labore et dolore magna aliqua. Venenatis tellus in metus vulp utate eu sceler
-                                            isque felis. Vel pretium.
+                                            After placing your order, you should receive an order confirmation email or a confirmation page on the website. This confirmation typically includes an order number or reference code. Keep this information handy as you'll need it for tracking.
                                         </p>
                                     </div>
                                 </div>
@@ -158,9 +148,7 @@
                                     </div>
                                     <div id="collapse5" class="card-body collapsed">
                                         <p class="mb-0">
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                            temp orincid idunt ut labore et dolore magna aliqua. Venenatis tellus in
-                                            metus vulp utate eu sceler isque felis. Vel pretium.
+                                            Start by reviewing the refund policy of Bazaarry. This policy outlines the conditions and guidelines for requesting a refund, including eligible products, timeframes, and any specific requirements.
                                         </p>
                                     </div>
                                 </div>

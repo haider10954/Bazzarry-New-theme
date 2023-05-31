@@ -102,6 +102,7 @@
                                                 <thead class="table-light">
                                                 <tr>
                                                     <th scope="col">No.</th>
+                                                    <th scope="col">Sub Category No.</th>
                                                     <th scope="col">Date</th>
                                                     <th scope="col">Name</th>
                                                     <th scope="col">Status</th>
@@ -111,7 +112,8 @@
                                                 <tbody>
                                                     @forelse($category as $item)
                                                         <tr>
-                                                            <td>{{$loop->index+1}} {{ chieldCategory($category,$item->id)->count() }}</td>
+                                                            <td>{{$loop->index+1}}</td>
+                                                            <td>{{ chieldCategory($category,$item->id)->count() }}</td>
                                                             <td>
                                                                 {{\Carbon\Carbon::parse($item->created_at)->format('d-m-Y')}}
                                                             </td>
