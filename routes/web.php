@@ -187,8 +187,8 @@ Route::prefix('seller')->group(function () {
             return view('admin.pages.lock_screen');
         })->name('lock-screen');
 
+        Route::get('/orders', [\App\Http\Controllers\seller\ProductController::class, 'sellerOrders'])->name('orders');
 
-        Route::get('/seller-orders', [\App\Http\Controllers\seller\ProductController::class, 'sellerOrders']);
 
         //add category
         Route::post('/add-category', [\App\Http\Controllers\seller\ProductController::class, 'add_category'])->name('add_category-seller');
@@ -226,9 +226,6 @@ Route::prefix('seller')->group(function () {
         Route::post('/delete-product-images', [\App\Http\Controllers\seller\ProductController::class, 'deleteProductImage'])->name('delete_product_images');
 
 
-        Route::get('/orders', function () {
-            return view('seller.pages.orders');
-        })->name('orders');
 
         Route::get('/order-details', function () {
             return view('seller.pages.order_details');
