@@ -37,7 +37,7 @@ document.getElementById('sendButton').addEventListener('click', function () {
 
 document.querySelector('.chat-input input').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
-        sendMessage();
+        sendMessage(document.getElementById('sendButton').getAttribute('data-url'));
     }
 });
 

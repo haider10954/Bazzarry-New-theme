@@ -665,7 +665,7 @@
         var formData = new FormData($("#sendResponse")[0]);
         $.ajax({
             type: "POST",
-            url: "{{ route('chatbot.sendMessage') }}",
+            url: "{{ route('chatbot.sendDiscription') }}",
             dataType: 'json',
             contentType: false,
             processData: false,
@@ -684,7 +684,16 @@
                     // Update the CKEditor field with the response
                     editorInstance.setData(res.message);
 
-                } else {}
+                } else {
+                    $('#getResponse').prop('disabled',false);
+                    $('#getResponse').html('Submit Again');
+                    setTimeout(function (e){
+                        notyf.error({
+                            message: res.message,
+                            duration: 3000
+                        });
+                    },2000)
+                }
             },
             error: function(e) {}
         });

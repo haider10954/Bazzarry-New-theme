@@ -187,8 +187,8 @@ Route::prefix('seller')->group(function () {
             return view('admin.pages.lock_screen');
         })->name('lock-screen');
 
-
         Route::get('/orders', [\App\Http\Controllers\seller\ProductController::class, 'sellerOrders'])->name('orders');
+
 
         //add category
         Route::post('/add-category', [\App\Http\Controllers\seller\ProductController::class, 'add_category'])->name('add_category-seller');
@@ -257,3 +257,4 @@ Route::get('/error', [CheckoutController::class, 'cancelPayment'])->name('paypal
 
 //Chatbot routes
 Route::post('/chat/message', [ChatController::class, 'sendMessage'])->name('chatbot.sendMessage');
+Route::post('/chat/description', [ChatController::class, 'sendDescription'])->name('chatbot.sendDiscription');
