@@ -87,7 +87,11 @@ function sendMessage(routeUrl) {
                     localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
                     setResponse(res.message, chatContentElement);
                 } else {
-                    setResponse(`Something went wrong. Please try again.`, chatContentElement);
+                    if (res.message != "") {
+                        setResponse(res.message, chatContentElement);
+                    } else {
+                        setResponse(`Something went wrong. Please try again.`, chatContentElement);
+                    }
                 }
             },
             error: function () {

@@ -11,6 +11,12 @@ class ChatController extends Controller
     {
         try {
             $message = $request['message'];
+            if (!$this->checkMessage($message)) {
+                return json_encode([
+                    'success' => false,
+                    'message' => 'Please ask questions related e-commerce only'
+                ]);
+            }
             $history = json_decode($request['history']);
             $history[] = (object)['role' => 'user', 'content' => $message];
             $botResponse = $this->getReply($history);
@@ -85,5 +91,39 @@ class ChatController extends Controller
         } catch (Exception $e) {
             return "";
         }
+    }
+
+    private function checkMessage($message)
+    {
+        $chat = [
+            (object)['role' => 'user', 'content' => $message . ". Check if this message is a question related e-commerce. Ignore greetings. Answer yes or no only"]
+        ];
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.openai.com/v1/chat/completions',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => json_encode([
+                'model' => "gpt-3.5-turbo",
+                'messages' => $chat
+            ]),
+            CURLOPT_HTTPHEADER => array(
+                "Content-Type: application/json",
+                "Authorization: Bearer " . env('OPENAI_KEY')
+            ),
+        ));
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $response = json_decode($response);
+        $response = trim($response->choices[0]->message->content);
+        if (str_contains(strtolower($response), 'yes')) {
+            return true;
+        }
+        return false;
     }
 }
