@@ -187,6 +187,9 @@ Route::prefix('seller')->group(function () {
             return view('admin.pages.lock_screen');
         })->name('lock-screen');
 
+        
+        Route::get('/seller-orders', [\App\Http\Controllers\seller\ProductController::class, 'sellerOrders']);
+
         //add category
         Route::post('/add-category', [\App\Http\Controllers\seller\ProductController::class, 'add_category'])->name('add_category-seller');
 

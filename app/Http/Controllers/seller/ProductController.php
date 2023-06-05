@@ -6,16 +6,37 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\seller\AddProductRequest;
 use App\Http\Requests\seller\EditProductRequest;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Variant;
-use App\Models\VariantValue;
-use GuzzleHttp\Handler\Proxy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
+
+    public function sellerOrders()
+    {
+        $seller = auth('seller')->user();
+        $sellerProducts = Product::where('added_id',$seller->id)->pluck('id');
+        $orders = Order::get();
+        $sellerOrders = [];
+
+        foreach($orders as $order)
+        {
+            $orderItems = collect(unserialize($order->cart_items));
+            $sellerOrderItems = $orderItems->whereIn('product_id',$sellerProducts);
+            if($sellerOrderItems->count() > 0)
+            {
+                $row = $order;
+                $row->order_items = $sellerOrderItems;
+                $sellerOrders[] = $row;
+            }
+        }
+        dd($sellerOrders);
+    }
+
     public function index()
     {
         $products = Product::latest()->paginate(10);
