@@ -102,10 +102,10 @@
                                     <div class="mt-4">
                                         <button class="btn btn-success w-100" id="submitForm" type="submit">Sign Up
                                         </button>
-                                        <button type="button"
-                                                class="btn btn-light mt-2 bg-gradient waves-effect waves-light w-100">
-                                            Sign Up with Google
-                                        </button>
+{{--                                        <button type="button"--}}
+{{--                                                class="btn btn-light mt-2 bg-gradient waves-effect waves-light w-100">--}}
+{{--                                            Sign Up with Google--}}
+{{--                                        </button>--}}
                                     </div>
                                 </form>
                             </div>

@@ -30,7 +30,7 @@
                         <div class="col-12">
                             <div class="d-flex align-items-lg-center flex-lg-row flex-column">
                                 <div class="flex-grow-1">
-                                    <h4 class="fs-16 mb-1">Good Morning, Anna!</h4>
+{{--                                    <h4 class="fs-16 mb-1">Good Morning, Anna!</h4>--}}
                                     <p class="text-muted mb-0">Here's what's happening with your site today.</p>
                                 </div>
                                 <div class="mt-3 mt-lg-0">
@@ -65,11 +65,6 @@
                                             <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
                                                 Sellers</p>
                                         </div>
-                                        <div class="flex-shrink-0">
-                                            <h5 class="text-success fs-14 mb-0">
-                                                <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +16.24 %
-                                            </h5>
-                                        </div>
                                     </div>
                                     <div class="d-flex align-items-end justify-content-between mt-4">
                                         <div>
@@ -93,11 +88,6 @@
                                         <div class="flex-grow-1 overflow-hidden">
                                             <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
                                                 Orders</p>
-                                        </div>
-                                        <div class="flex-shrink-0">
-                                            <h5 class="text-danger fs-14 mb-0">
-                                                <i class="ri-arrow-right-down-line fs-13 align-middle"></i> -3.57 %
-                                            </h5>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-end justify-content-between mt-4">
@@ -123,11 +113,6 @@
                                             <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
                                                 Customers</p>
                                         </div>
-                                        <div class="flex-shrink-0">
-                                            <h5 class="text-success fs-14 mb-0">
-                                                <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +29.08 %
-                                            </h5>
-                                        </div>
                                     </div>
                                     <div class="d-flex align-items-end justify-content-between mt-4">
                                         <div>
@@ -150,11 +135,6 @@
                                     <div class="d-flex align-items-center">
                                         <div class="flex-grow-1 overflow-hidden">
                                             <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Products</p>
-                                        </div>
-                                        <div class="flex-shrink-0">
-                                            <h5 class="text-muted fs-14 mb-0">
-                                                +0.00 %
-                                            </h5>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-end justify-content-between mt-4">
@@ -232,22 +212,6 @@
                             <div class="card">
                                 <div class="card-header align-items-center d-flex">
                                     <h4 class="card-title mb-0 flex-grow-1">Best Selling Products</h4>
-                                    <div class="flex-shrink-0">
-                                        <div class="dropdown card-header-dropdown">
-                                            <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <span class="fw-semibold text-uppercase fs-12">Sort by:
-                                                </span><span class="text-muted">Today<i class="mdi mdi-chevron-down ms-1"></i></span>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-end">
-                                                <a class="dropdown-item" href="#">Today</a>
-                                                <a class="dropdown-item" href="#">Yesterday</a>
-                                                <a class="dropdown-item" href="#">Last 7 Days</a>
-                                                <a class="dropdown-item" href="#">Last 30 Days</a>
-                                                <a class="dropdown-item" href="#">This Month</a>
-                                                <a class="dropdown-item" href="#">Last Month</a>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div><!-- end card header -->
 
                                 <div class="card-body">
@@ -256,7 +220,7 @@
                                             <tbody>
                                             @if ($best_products->count() > 0)
                                                 @foreach ($best_products as $item)
-                                                
+
                                                 <tr>
                                                     <td>
                                                         <div class="d-flex align-items-center">
@@ -298,32 +262,6 @@
                                             </tbody>
                                         </table>
                                     </div>
-
-                                    <div class="align-items-center mt-4 pt-2 justify-content-between d-flex">
-                                        <div class="flex-shrink-0">
-                                            <div class="text-muted">
-                                                Showing <span class="fw-semibold">5</span> of <span class="fw-semibold">25</span> Results
-                                            </div>
-                                        </div>
-                                        <ul class="pagination pagination-separated pagination-sm mb-0">
-                                            <li class="page-item disabled">
-                                                <a href="#" class="page-link">←</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a href="#" class="page-link">1</a>
-                                            </li>
-                                            <li class="page-item active">
-                                                <a href="#" class="page-link">2</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a href="#" class="page-link">3</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a href="#" class="page-link">→</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-
                                 </div>
                             </div>
                         </div>
@@ -1093,5 +1031,5 @@
         }, (chart = new ApexCharts(document.querySelector("#store-visits-source"), options)).render());
     });
 </script>
-    
+
 @endsection
