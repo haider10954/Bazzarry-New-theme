@@ -59,7 +59,7 @@
                                                 <td class="id">{{$loop->index+1}}</td>
                                                 <td class="customer_name">{{$item->getUser->name}}</td>
                                                 <td class="product_name">
-                                                    <ul class="list-group">
+                                                    <ul class="list-group list-group-flush">
                                                         @if(!empty($item->order_items))
                                                             @foreach($item->order_items as $key=>$value)
                                                                 <li class="list-group-item">
