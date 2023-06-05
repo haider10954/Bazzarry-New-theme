@@ -34,7 +34,7 @@ class ProductController extends Controller
                 $sellerOrders[] = $row;
             }
         }
-        dd($sellerOrders);
+        return view('seller.pages.orders',compact('sellerOrders'));
     }
 
     public function index()
@@ -147,7 +147,7 @@ class ProductController extends Controller
         $product = Product::where('slug', $slug)->first();
 
         $variant = Variant::with('values')->get();
-        
+
         $data = [];
         foreach($variant as $key => $value)
         {
@@ -206,7 +206,7 @@ class ProductController extends Controller
             'slug' => $modified_string . '-' . $request['id'],
             'added_id' => auth('seller')->id()
         ]);
-        
+
         ProductVariant::where('product_id',$product->id)->delete();
         for ($i  = 0; $i < count($request->v_price); $i++) {
             ProductVariant::create([
