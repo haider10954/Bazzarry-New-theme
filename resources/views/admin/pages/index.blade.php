@@ -29,25 +29,25 @@
                         <div class="col-12">
                             <div class="d-flex align-items-lg-center flex-lg-row flex-column">
                                 <div class="flex-grow-1">
-                                    <h4 class="fs-16 mb-1">Good Morning, Anna!</h4>
+{{--                                    <h4 class="fs-16 mb-1">Good Morning, Anna!</h4>--}}
                                     <p class="text-muted mb-0">Here's what's happening with your site today.</p>
                                 </div>
-                                <div class="mt-3 mt-lg-0">
-                                    <form action="javascript:void(0);">
-                                        <div class="row g-3 mb-0 align-items-center">
-                                            <div class="col-sm-auto">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control border-0 dash-filter-picker shadow flatpickr-input" data-provider="flatpickr" data-range-date="true" data-date-format="d M, Y" readonly="readonly">
-                                                    <div class="input-group-text bg-primary border-primary text-white">
-                                                        <i class="ri-calendar-2-line"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!--end col-->
-                                        </div>
-                                        <!--end row-->
-                                    </form>
-                                </div>
+{{--                                <div class="mt-3 mt-lg-0">--}}
+{{--                                    <form action="javascript:void(0);">--}}
+{{--                                        <div class="row g-3 mb-0 align-items-center">--}}
+{{--                                            <div class="col-sm-auto">--}}
+{{--                                                <div class="input-group">--}}
+{{--                                                    <input type="text" class="form-control border-0 dash-filter-picker shadow flatpickr-input" data-provider="flatpickr" data-range-date="true" data-date-format="d M, Y" readonly="readonly">--}}
+{{--                                                    <div class="input-group-text bg-primary border-primary text-white">--}}
+{{--                                                        <i class="ri-calendar-2-line"></i>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                            <!--end col-->--}}
+{{--                                        </div>--}}
+{{--                                        <!--end row-->--}}
+{{--                                    </form>--}}
+{{--                                </div>--}}
                             </div><!-- end card header -->
                         </div>
                         <!--end col-->
@@ -63,11 +63,6 @@
                                         <div class="flex-grow-1 overflow-hidden">
                                             <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
                                                 Sellers</p>
-                                        </div>
-                                        <div class="flex-shrink-0">
-                                            <h5 class="text-success fs-14 mb-0">
-                                                <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +16.24 %
-                                            </h5>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-end justify-content-between mt-4">
@@ -93,11 +88,6 @@
                                             <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
                                                 Orders</p>
                                         </div>
-                                        <div class="flex-shrink-0">
-                                            <h5 class="text-danger fs-14 mb-0">
-                                                <i class="ri-arrow-right-down-line fs-13 align-middle"></i> -3.57 %
-                                            </h5>
-                                        </div>
                                     </div>
                                     <div class="d-flex align-items-end justify-content-between mt-4">
                                         <div>
@@ -122,11 +112,6 @@
                                             <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
                                                 Customers</p>
                                         </div>
-                                        <div class="flex-shrink-0">
-                                            <h5 class="text-success fs-14 mb-0">
-                                                <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +29.08 %
-                                            </h5>
-                                        </div>
                                     </div>
                                     <div class="d-flex align-items-end justify-content-between mt-4">
                                         <div>
@@ -149,11 +134,6 @@
                                     <div class="d-flex align-items-center">
                                         <div class="flex-grow-1 overflow-hidden">
                                             <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Products</p>
-                                        </div>
-                                        <div class="flex-shrink-0">
-                                            <h5 class="text-muted fs-14 mb-0">
-                                                +0.00 %
-                                            </h5>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-end justify-content-between mt-4">
@@ -278,36 +258,9 @@
                                                     </td>
                                                 </tr>
                                                 @endif
-                                                >>>>>>> d84eb007f0aab39701e9aaf5c79e95f4f51b2401
                                             </tbody>
                                         </table>
                                     </div>
-
-                                    <div class="align-items-center mt-4 pt-2 justify-content-between d-flex">
-                                        <div class="flex-shrink-0">
-                                            <div class="text-muted">
-                                                Showing <span class="fw-semibold">5</span> of <span class="fw-semibold">25</span> Results
-                                            </div>
-                                        </div>
-                                        <ul class="pagination pagination-separated pagination-sm mb-0">
-                                            <li class="page-item disabled">
-                                                <a href="#" class="page-link">←</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a href="#" class="page-link">1</a>
-                                            </li>
-                                            <li class="page-item active">
-                                                <a href="#" class="page-link">2</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a href="#" class="page-link">3</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a href="#" class="page-link">→</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-
                                 </div>
                             </div>
                         </div>
@@ -362,7 +315,7 @@
 
                                                     </td>
                                                     <td>
-                                                        <h5 class="fs-14 fw-medium mb-0">5.0<span class="text-muted fs-11 ms-1">(61 votes)</span></h5>
+                                                        <h5 class="fs-14 fw-medium mb-0">5.0</h5>
                                                     </td>
                                                 </tr><!-- end tr -->
                                                 @endforeach

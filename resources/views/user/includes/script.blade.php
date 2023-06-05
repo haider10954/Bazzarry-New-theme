@@ -10,7 +10,7 @@
 <script src="{{asset('user_assets/vendor/imagesloaded/imagesloaded.pkgd.min.js')}}"></script>
 @endif
 @if(in_array('magnific',$useAssets))
-<script src="{{asset('user_assets/vendor/magnific-popup/jquery.magnific-popup.min.js')}}"></script>
+{{--<script src="{{asset('user_assets/vendor/magnific-popup/jquery.magnific-popup.min.js')}}"></script>--}}
 @endif
 @if(in_array('vendor_swiper',$useAssets))
 <script src="{{asset('user_assets/vendor/swiper/swiper-bundle.min.js')}}"></script>

@@ -39,7 +39,7 @@
                     <div class="text-center mt-sm-5 mb-4 text-white-50">
                         <div>
                             <a href="index.html" class="d-inline-block auth-logo">
-                                <img src="{{asset('admin_assets/images/logo-light.png')}}" alt="" height="20">
+                                <img src="{{asset('admin_assets/images/admin-logo.png')}}" alt="" height="35">
                             </a>
                         </div>
                         <p class="mt-3 fs-15 fw-medium">Seller Dashboard Authentication</p>
@@ -89,7 +89,7 @@
 
                                     <div class="mt-4">
                                         <button class="btn btn-success w-100" id="submitForm" type="submit">Sign In</button>
-                                        <button type="button" class="btn btn-light mt-2 bg-gradient waves-effect waves-light w-100">Sign In with Google</button>
+{{--                                        <button type="button" class="btn btn-light mt-2 bg-gradient waves-effect waves-light w-100">Sign In with Google</button>--}}
 
                                     </div>
                                 </form>
