@@ -109,11 +109,27 @@ class DashboardController extends Controller
 
         // Best Products
         $best_products = Product::query()->where('added_id', auth('seller')->id())->where('sale_count', '>', 0)->orderBy('sale_count', 'DESC')->get();
-        
 
 
+        $seller_products = Product::where('added_id', auth('seller')->id())->get()->count();
 
+        $seller = auth('seller')->user();
+        $sellerProducts = Product::where('added_id',$seller->id)->pluck('id');
+        $orders = Order::get();
+        $sellerOrders = [];
 
+        foreach($orders as $order)
+        {
+            $orderItems = collect(unserialize($order->cart_items));
+            $sellerOrderItems = $orderItems->whereIn('product_id',$sellerProducts);
+            if($sellerOrderItems->count() > 0)
+            {
+                $row = $order;
+                $row->order_items = $sellerOrderItems;
+                $sellerOrders[] = $row;
+            }
+        }
+        $seller_orders = collect($sellerOrders);
         return view('seller.pages.index', compact(
             'seller',
             'all_products',
@@ -125,6 +141,8 @@ class DashboardController extends Controller
             'list',
             'recent_orders',
             'best_products',
+            'seller_products',
+            'seller_orders'
         ));
     }
 }
