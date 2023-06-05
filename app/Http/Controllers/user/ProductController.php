@@ -153,6 +153,10 @@ class ProductController extends Controller
                 $id = Category::select('id')->where('name', request('category'))->first();
                 $query->where('category_id', $id->id);
             })
+            ->when(!empty(request('max')) && !empty(request('min')), function ($q) {
+                $q->where('price', '>=', request('min'));               
+                $q->where('price', '<=', request('max'));     
+            })
             ->with('getCategory')
             ->when(request('search') && !empty(request('search')), function ($query) {
                 $query->where('title', 'LIKE', '%' . request('search') . '%');

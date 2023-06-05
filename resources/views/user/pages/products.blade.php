@@ -45,9 +45,16 @@
                                     <h3 class="widget-title"><span>Price</span></h3>
                                     <div class="widget-body">
                                         <form class="price-range">
-                                            <input type="number" name="min_price" class="min_price text-center"
-                                                   placeholder="Rs.min"><span class="delimiter">-</span><input
-                                                type="number" name="max_price" class="max_price text-center"
+                                            <input 
+                                                type="number" 
+                                                name="min_price" 
+                                                class="min_price text-center"
+                                                placeholder="Rs.min">
+                                                <span class="delimiter">-</span>
+                                            <input 
+                                                type="number" 
+                                                name="max_price" 
+                                                class="max_price text-center"
                                                 placeholder="Rs.max">
                                         </form>
                                     </div>
@@ -242,6 +249,11 @@
                 }
             });
         });
+        if($(".min_price").val() != "" && $(".max_price").val() != "")
+        {
+            form += `<input type="hidden" name="max" value="${$(".min_price").val()}">`;
+            form += `<input type="hidden" name="min" value="${$(".max_price").val()}">`;
+        }
         form += `</form>`;
         $("body").append(form);
         $(document).find(".filter_form").submit();
